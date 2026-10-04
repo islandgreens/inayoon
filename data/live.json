@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-04T20:20:00Z",
+  "updated": "2026-10-04T20:44:24.725Z",
   "state": "pre",
   "event": {
     "id": "401835171",
@@ -13,8 +13,16 @@
   "total": 202,
   "round": 4,
   "thru": 0,
-  "teeTime": "2026-10-04T22:55:00Z",
-  "rounds": [66, 67, 69],
+  "teeTime": "2026-10-04T22:55:00.000Z",
+  "rounds": [
+    66,
+    67,
+    69
+  ],
   "statusText": "",
-  "next": { "name": "Buick LPGA Shanghai", "start": "2026-10-15", "end": "2026-10-18" }
+  "next": {
+    "name": "Buick LPGA Shanghai",
+    "start": "2026-10-15",
+    "end": "2026-10-18"
+  }
 }
