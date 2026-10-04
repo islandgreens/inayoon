@@ -1,6 +1,6 @@
-/* Ina Yoon fan page content. Every fact carries source ids from SOURCES.
+/* Ina Yoon fan page content. Facts carry source ids from SOURCES (videos, schedule and live data do not).
    Edit this file to update the page; layout code never needs to change.
-   Content verified on: 2026-10-04. */
+   Content verified on: 2026-10-04 (v2). */
 window.IY = (function () {
   const SOURCES = {
     wiki: { label: "Wikipedia: Ina Yoon", url: "https://en.wikipedia.org/wiki/Ina_Yoon" },
@@ -72,6 +72,7 @@ window.IY = (function () {
     apLead: { label: "Associated Press via KSL, Jun 2026", url: "https://www.ksl.com/article/51558629/ina-yoon-widens-her-womens-pga-championship-lead-to-5-strokes" },
     dist22: { label: "Ilgan Sports, Feb 2025 (Korean)", url: "https://isplus.com/article/view/isp202502040328" },
     ohCoach: { label: "Economy Chosun, Jan 2025 (Korean)", url: "https://v.daum.net/v/20250131111455225" },
+    sedDriver: { label: "Seoul Economic Daily, Mar 2026 (Korean)", url: "https://v.daum.net/v/20260327060127841" },
     speed22: { label: "Daum Sports, Jul 2022 (Korean)", url: "https://v.daum.net/v/UIpejv9rmq" }
   };
 
@@ -86,6 +87,12 @@ window.IY = (function () {
       { k: "Home base", v: "Tampa, Florida", src: ["wiki"] },
       { k: "Management", v: "Sema Sports Marketing", src: ["semaSed"] }
     ]
+  };
+
+  /* Photos supplied by the site owner. Set credit to the photographer or source if known. */
+  const photos = {
+    main: { src: "assets/ina-action.jpg", alt: "Ina Yoon watching an iron shot from the fairway", credit: "" },
+    story: { src: "assets/ina-portrait.jpg", alt: "Studio portrait of Ina Yoon holding an iron", credit: "" }
   };
 
   const stats = [
@@ -147,9 +154,9 @@ window.IY = (function () {
   ];
 
   const bag = {
-    asOf: "Models as listed on her TaylorMade Korea player page, checked October 4, 2026. The page is undated, and lofts and shafts are not published.",
+    asOf: "Models as listed on her TaylorMade Korea player page, checked October 4, 2026, except the driver, which comes from a March 2026 press report. Lofts and shafts are not published.",
     current: [
-      { slot: "Driver", item: "Not confirmed", note: "She appeared at the TaylorMade Qi4D launch in January 2026, but no source confirms which driver she plays.", src: ["ajuQi4d"], unknown: true },
+      { slot: "Driver", item: "TaylorMade Qi4D", note: "Reported in March 2026 as her new driver for the season. Which version, loft and shaft are not published.", src: ["sedDriver"] },
       { slot: "Fairway wood", item: "TaylorMade Qi4D Tour", src: ["tmKorea"] },
       { slot: "Hybrid", item: "TaylorMade Qi4D Rescue", src: ["tmKorea"] },
       { slot: "Irons", item: "TaylorMade P770 and P7CB", note: "Which irons are which model is not published.", src: ["tmKorea"] },
@@ -210,6 +217,7 @@ window.IY = (function () {
     },
     "2025": {
       note: "Rookie season. The 25 stroke-play starts shown total $554,766. She also played the T-Mobile Match Play (Apr 2 to 6); that result is not yet verified and is left out.",
+      note2: "The 2025 Walmart NW Arkansas Championship row shows one round only. The data feed lists the 2025 Mizuho Americas Open as a missed cut but also shows earnings, so her finish there is awaiting a second check.",
       rows: [
         ["Nov 13 to 16", "The ANNIKA", "T21", "69 68 70 65", "-8", "$34,319", ""],
         ["Nov 6 to 8", "TOTO Japan Classic", "T10", "72 70 67", "-7", "$31,537", ""],
@@ -274,20 +282,23 @@ window.IY = (function () {
     ]
   };
 
+  /* Videos are sorted newest first on the page, by the date of the event shown.
+     Checked October 4, 2026: each plays embedded. Three earlier picks (two NBC Sports, one KBS)
+     were removed because their owners block them outside their home countries. */
   const videos = [
-    { id: "c8atS-iT2tg", t: "The record-tying 63 at Hazeltine", c: "LPGA", d: "2026 KPMG Women's PGA, round 1", g: "2026" },
-    { id: "mWc1piHJ1sI", t: "Embracing the moment with the lead", c: "NBC Sports", d: "2026 KPMG Women's PGA, after round 2", g: "2026" },
-    { id: "xBig9IETevE", t: "Five clear at halfway", c: "LPGA Korea", d: "2026 KPMG Women's PGA, round 2 (Korean)", g: "2026" },
-    { id: "awlBSAFpHjA", t: "Final round at Hazeltine", c: "LPGA Korea", d: "2026 KPMG Women's PGA, final round (Korean)", g: "2026" },
-    { id: "a-v4raIKHuA", t: "Round 2 at the Chevron", c: "LPGA Korea", d: "2026 Chevron Championship, round 2 (Korean)", g: "2026" },
-    { id: "MYqDOl1mqVo", t: "Moving day in Los Angeles", c: "LPGA Korea", d: "2026 JM Eagle LA Championship, round 3 (Korean)", g: "2026" },
-    { id: "UN23oGCc--Q", t: "Opening 66 in Hawaii", c: "LPGA Korea", d: "2026 LOTTE Championship, round 1 (Korean)", g: "2026" },
-    { id: "0O_A8gU1oYk", t: "Every shot of the comeback win", c: "SBS Golf", d: "2024 Jeju Samdasoo Masters (Korean)", g: "KLPGA" },
-    { id: "M_SRKzqQIJ0", t: "First round back", c: "SBS Golf", d: "2024 return to the KLPGA (Korean)", g: "KLPGA" },
-    { id: "2e9bxJlyyBQ", t: "The first win", c: "SBS Golf", d: "2022 Evercollagen Queens Crown, final round (Korean)", g: "KLPGA" },
-    { id: "WIm01zaJYSI", t: "The moment she earned her LPGA card", c: "SBS Golf", d: "December 2024 (Korean)", g: "Features" },
-    { id: "myGD8Veikk0", t: "4D driver swing analysis", c: "SBS Golf", d: "2022, with two other players (Korean)", g: "Features" },
-    { id: "IFsLy3sLvPI", t: "The day she swept the KLPGA awards", c: "KBS Sports", d: "November 2024 news report (Korean)", g: "Features" }
+    { id: "UN23oGCc--Q", date: "2026-10-01", t: "Opening 66 in Hawaii", c: "LPGA Korea", d: "LOTTE Championship, round 1 (Korean)" },
+    { id: "3nBOLJl3VA0", date: "2026-07-24", t: "A 68 on the Scottish links", c: "LPGA Korea", d: "ISPS Handa Women's Scottish Open, round 2 (Korean)" },
+    { id: "awlBSAFpHjA", date: "2026-06-28", t: "Final round at Hazeltine", c: "LPGA Korea", d: "KPMG Women's PGA, final round (Korean)" },
+    { id: "xBig9IETevE", date: "2026-06-26", t: "Five clear at halfway", c: "LPGA Korea", d: "KPMG Women's PGA, round 2 (Korean)" },
+    { id: "c8atS-iT2tg", date: "2026-06-25", t: "The record-tying 63 at Hazeltine", c: "LPGA", d: "KPMG Women's PGA, round 1" },
+    { id: "OMJ4E1ObqG8", date: "2026-04-25", t: "Round 3 at the Chevron", c: "LPGA Korea", d: "Chevron Championship, round 3 (Korean)" },
+    { id: "a-v4raIKHuA", date: "2026-04-24", t: "Round 2 at the Chevron", c: "LPGA Korea", d: "Chevron Championship, round 2 (Korean)" },
+    { id: "MYqDOl1mqVo", date: "2026-04-18", t: "Moving day in Los Angeles", c: "LPGA Korea", d: "JM Eagle LA Championship, round 3 (Korean)" },
+    { id: "WIm01zaJYSI", date: "2024-12-11", t: "The moment she earned her LPGA card", c: "SBS Golf", d: "After LPGA Q-Series (Korean)" },
+    { id: "0O_A8gU1oYk", date: "2024-08-04", t: "Every shot of the comeback win", c: "SBS Golf", d: "Jeju Samdasoo Masters (Korean)" },
+    { id: "M_SRKzqQIJ0", date: "2024-04-11", t: "Leading a week after her return", c: "SBS Golf", d: "Mediheal Hankook Ilbo Championship, round 1 (Korean)" },
+    { id: "2e9bxJlyyBQ", date: "2022-07-17", t: "The first win", c: "SBS Golf", d: "Evercollagen Queens Crown, final round (Korean)" },
+    { id: "myGD8Veikk0", date: "2022-07-03", t: "4D driver swing analysis", c: "SBS Golf", d: "With two other players (Korean)" }
   ];
 
   const links = [
@@ -309,5 +320,5 @@ window.IY = (function () {
     next: { name: "Buick LPGA Shanghai", start: "2026-10-15", end: "2026-10-18" }
   };
 
-  return { SOURCES, profile, stats, bio, timeline, deepCuts, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
+  return { SOURCES, profile, photos, stats, bio, timeline, deepCuts, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
 })();
