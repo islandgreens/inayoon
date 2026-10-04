@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ina Yoon Fan Page: Scores, Stories and Deep Cuts</title>
+<meta name="description" content="An unofficial fan page for LPGA golfer Ina Yoon: live tournament progress, results, biography, what is in her bag, and stories from Korean press.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="Ina Yoon fan page, back to top">Shine on, Ina</a>
+    <nav aria-label="Sections">
+      <a href="#live">Live</a>
+      <a href="#story">Story</a>
+      <a href="#results">Results</a>
+      <a href="#deep-cuts">Deep cuts</a>
+      <a href="#bag">The bag</a>
+      <a href="#watch">Watch</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section id="top" class="wrap intro">
+    <div class="intro-text">
+      <p class="kicker" id="kicker"></p>
+      <h1 id="name"></h1>
+      <p class="quote" id="quote"></p>
+      <dl class="facts" id="facts"></dl>
+    </div>
+    <aside id="live" class="live" aria-live="polite" aria-label="Current tournament"></aside>
+  </section>
+
+  <section class="wrap stats" id="stats" aria-label="Key numbers"></section>
+
+  <section id="story" class="wrap sec">
+    <div class="sec-head"><p class="label">Biography</p><h2>The story so far</h2></div>
+    <div class="story">
+      <div class="bio" id="bio"></div>
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </section>
+
+  <section id="results" class="wrap sec">
+    <div class="sec-head"><p class="label">Tournament results</p><h2>Start by start</h2></div>
+    <div class="tabs" role="tablist" aria-label="Results views" id="tabs"></div>
+    <div id="results-panel" class="panel" role="tabpanel"></div>
+  </section>
+
+  <section id="deep-cuts" class="wrap sec">
+    <div class="sec-head"><p class="label">Mostly from Korean press</p><h2>Things only fans know</h2></div>
+    <div class="cuts" id="cuts"></div>
+    <h3 class="sub">Her team</h3>
+    <div class="team" id="team"></div>
+  </section>
+
+  <section id="bag" class="wrap sec">
+    <div class="sec-head"><p class="label">Equipment</p><h2>What is in the bag</h2></div>
+    <p class="asof" id="bag-asof"></p>
+    <div class="bag">
+      <div id="bag-list" class="bag-list"></div>
+      <div id="bag-story" class="bag-story"></div>
+    </div>
+    <div class="bag-extra">
+      <div id="bag-numbers"></div>
+      <details id="bag-old"></details>
+    </div>
+  </section>
+
+  <section id="watch" class="wrap sec">
+    <div class="sec-head"><p class="label">Videos and pictures</p><h2>Watch her go</h2></div>
+    <p class="asof">Videos play from the official and broadcaster channels on YouTube. Many are in Korean.</p>
+    <div class="videos" id="videos"></div>
+    <h3 class="sub">Photos and more</h3>
+    <p class="asof">Tournament photos are copyrighted, so this page links to the official galleries instead of copying them.</p>
+    <div class="links" id="links"></div>
+  </section>
+
+  <section id="sources" class="wrap sec">
+    <div class="sec-head"><p class="label">Receipts</p><h2>Sources</h2></div>
+    <p class="asof">The numbered links beside each fact lead to where it came from. Results come from LPGA and ESPN data. Many Korean articles are linked through Daum, which hosts copies from the original outlets.</p>
+    <ol class="sources" id="source-list"></ol>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>An unofficial fan page. Not affiliated with Ina Yoon, the LPGA, the KLPGA or her sponsors.</p>
+  <p id="verified"></p>
+</footer>
+
+<script src="data/content.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

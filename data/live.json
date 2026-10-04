@@ -1,0 +1,20 @@
+{
+  "updated": "2026-10-04T20:20:00Z",
+  "state": "pre",
+  "event": {
+    "id": "401835171",
+    "name": "LOTTE Championship pres. by Hoakalei",
+    "start": "2026-10-01",
+    "end": "2026-10-04",
+    "course": "Hoakalei Country Club"
+  },
+  "position": "T2",
+  "toPar": "-14",
+  "total": 202,
+  "round": 4,
+  "thru": 0,
+  "teeTime": "2026-10-04T22:55:00Z",
+  "rounds": [66, 67, 69],
+  "statusText": "",
+  "next": { "name": "Buick LPGA Shanghai", "start": "2026-10-15", "end": "2026-10-18" }
+}
