@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-05T02:26:04.354Z",
-  "state": "in",
+  "updated": "2026-10-05T09:33:55.896Z",
+  "state": "post",
   "event": {
     "id": "401835171",
     "name": "LOTTE Championship pres. by Hoakalei",
@@ -9,15 +9,16 @@
     "course": "Hoakalei Country Club"
   },
   "position": "2",
-  "toPar": "-19",
-  "total": 256,
+  "toPar": "-18",
+  "total": 270,
   "round": 4,
-  "thru": 15,
+  "thru": 18,
   "teeTime": "2026-10-04T22:55:00.000Z",
   "rounds": [
     66,
     67,
-    69
+    69,
+    68
   ],
   "statusText": "",
   "next": {
@@ -35,5 +36,5 @@
       70
     ]
   },
-  "today": "-5"
+  "today": ""
 }
