@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-05T00:09:15.950Z",
+  "updated": "2026-10-05T02:26:04.354Z",
   "state": "in",
   "event": {
     "id": "401835171",
@@ -9,10 +9,10 @@
     "course": "Hoakalei Country Club"
   },
   "position": "2",
-  "toPar": "-17",
-  "total": 215,
+  "toPar": "-19",
+  "total": 256,
   "round": 4,
-  "thru": 4,
+  "thru": 15,
   "teeTime": "2026-10-04T22:55:00.000Z",
   "rounds": [
     66,
@@ -35,5 +35,5 @@
       70
     ]
   },
-  "today": "-3"
+  "today": "-5"
 }
