@@ -164,6 +164,19 @@
       el("span", { class: "tag", text: c.tag }), el("h3", { text: c.h }), el("p", { text: c.t }), via(c.src)
     ]));
   });
+  if ($("fan") && D.fanClub) {
+    var F = D.fanClub;
+    var tiles = el("div", { class: "fan-tiles" });
+    F.tiles.forEach(function (t) {
+      tiles.appendChild(el("div", { class: "fan-tile" }, [el("b", { text: t.v }), el("span", { class: "k", text: t.k }), el("span", { class: "n", text: t.n })]));
+    });
+    $("fan").appendChild(el("div", { class: "fan-text" }, [
+      el("span", { class: "tag", text: "Shout-out" }), el("h3", { text: "To " + F.name + ", her fan club" }),
+      el("p", { text: F.lead }), el("p", { text: F.charity }),
+      F.url ? el("p", { class: "more" }, [ext(F.url, F.urlLabel)]) : null, via(F.src.slice(0, 1).concat(F.src.slice(3, 4)))
+    ]));
+    $("fan").appendChild(tiles);
+  }
   if ($("team")) D.team.forEach(function (m) {
     $("team").appendChild(el("div", { class: "mate" }, [el("span", { class: "role", text: m.role }), el("h4", { text: m.name }), el("p", { text: m.t })]));
   });
@@ -229,7 +242,7 @@
       ["Profile and key numbers", collect([D.profile.quoteSrc].concat(D.profile.facts, D.stats))],
       ["Her story", collect(D.bio.concat(D.timeline))],
       ["Results", collect([["lpgaResults", "espn", "rolex"], D.majors.src, D.klpga.season2024Src].concat(D.klpga.wins))],
-      ["Deep cuts", collect(D.deepCuts)],
+      ["Deep cuts and the fan club", collect(D.deepCuts.concat([D.fanClub]))],
       ["Her team", collect(D.team)],
       ["The bag", collect(D.bag.current.concat(D.bag.story, D.bag.numbers, [D.bag.old.src]))]
     ];
@@ -262,7 +275,8 @@
       var days = fmtDay(L.event.start) && fmtDay(L.event.end) ? fmtDay(L.event.start) + " to " + fmtDay(L.event.end) : "";
       box.appendChild(el("p", { class: "where", text: [L.event.course, days].filter(Boolean).join(" · ") }));
       var third;
-      if (st === "in") third = { b: L.thru ? String(L.thru) : "0", s: "Thru, round " + L.round };
+      if (st === "in" && L.today) third = { b: L.today, s: "Today, thru " + (L.thru || 0) };
+      else if (st === "in") third = { b: L.thru ? String(L.thru) : "0", s: "Thru, round " + L.round };
       else if (st === "pre" && L.teeTime) third = { b: fmtET(L.teeTime, { hour: "numeric", minute: "2-digit" }).replace(" ET", ""), s: "R" + L.round + " tee time, ET", small: true };
       else third = { b: L.total ? String(L.total) : "", s: "Total strokes" };
       box.appendChild(el("div", { class: "nums" }, [

@@ -126,7 +126,7 @@ window.IY = (function () {
   ];
 
   const deepCuts = [
-    { tag: "Origins", h: "Her name is a wish", t: "Hers is a pure Korean name. Her paternal grandmother chose \"Yoon Ina\" for how it sounds: shine on the world. Her fan club is called Bitina.", src: ["sed24sep", "heraldFans"], tone: "yellow" },
+    { tag: "Origins", h: "Her name is a wish", t: "Hers is a pure Korean name, not one built from Chinese characters. In Korean, \"yuni na\" means to gleam or shine. Her paternal grandmother insisted on it, saying: shine, shine in the world.", src: ["sed24sep"], tone: "yellow" },
     { tag: "Origins", h: "Chasing the bang", t: "She has told the story two ways: screen golf with her father, or an underground indoor range in Seoul with a tarp for a target. Both versions end the same. She loved the loud bang of a pure strike and kept swinging harder to hear it.", src: ["sed24sep", "donga22jul"], tone: "navy" },
     { tag: "Origins", h: "106 in her first tournament", t: "She learned golf as a hobby and shot 106 in her first event in fourth grade. She says she became a competitor because tournaments were more fun than practice.", src: ["donga22feb"], tone: "navy" },
     { tag: "Origins", h: "Dad's one rule", t: "From elementary school her father taught her to swing as hard and as far as she could and never to steer the driver to avoid trouble.", src: ["donga22feb"], tone: "pink" },
@@ -140,9 +140,23 @@ window.IY = (function () {
     { tag: "Off course", h: "Steak, tteokbokki and a guitar", t: "Her personality type is ESTJ. Favorite foods: steak and rice-cake tteokbokki, with kimchi stew the dish she misses abroad. She took up the guitar in 2024 and always carries a book.", src: ["sed24nov", "sed24sep", "donga22jul"], tone: "pink" },
     { tag: "Off course", h: "Nana and the Red Sox", t: "She has a Yorkshire terrier named Nana, and became a Boston Red Sox fan after a game at Fenway Park in 2025. Fitting, since her WTGL team is Boston Common Golf.", src: ["yonhapNana", "mhnWtgl"], tone: "navy" },
     { tag: "Fans", h: "A wall of letters", t: "Her favorite gift from fans is a handwritten letter, and she posts them on a wall at home. Asked how she wants to be remembered, she said as a player who moves people.", src: ["sed24sep"], tone: "navy" },
-    { tag: "Fans", h: "The Birdie Fund", t: "Bitina members pay into a fund for every birdie she makes. She adds her own money, and the total goes to children with cancer at Yonsei Medical Center: about 33.6 million won in 2024 and 43 million won in 2025.", src: ["munhwaDonate", "news1Donate"], tone: "white" },
     { tag: "Mindset", h: "The flag on her bag", t: "When a round is going badly she looks at the Korean flag stitched on her bag and shoes. Her stated goals on leaving for America: adapt, win Rookie of the Year, reach world No. 1 and win Olympic gold.", src: ["mk25", "chosun24dec"], tone: "navy" }
   ];
+
+  /* Fan club shout-out. Set url once the official cafe address is confirmed; the button is hidden while it is empty. */
+  const fanClub = {
+    name: "Bitina",
+    lead: "Her official fan club in Korea is called Bitina. The name rhymes with hers and carries the same wish: \"bichi na\" means \"shining\", literally \"light comes out\". At tournaments they turn up in pink and chant \"Yoon Ina, Bitina, fighting!\"",
+    charity: "They also do real good. Members pay into a Birdie Fund for every birdie she makes, she adds her own money, and the total goes to children and teenagers with cancer at Yonsei Medical Center in Seoul.",
+    tiles: [
+      { v: "4,753", k: "Fan cafe members", n: "October 2024, fourth among Korean women pros" },
+      { v: "33.6M won", k: "Donated in December 2024", n: "Half raised by fans, matched by her" },
+      { v: "43M won", k: "Donated in December 2025", n: "Birdie Fund plus her own money" }
+    ],
+    url: "https://cafe.naver.com/enayoune",
+    urlLabel: "Visit the Bitina fan cafe on Naver (in Korean)",
+    src: ["heraldFans", "edailyFan", "munhwaDonate", "news1Donate", "sed24sep"]
+  };
 
   const team = [
     { role: "Swing coach", name: "Oh Se-uk", t: "Has worked with her since junior days. Moved her ball flight to a fade in 2022 and was still her swing coach in early 2025. Whether that continues in 2026 is not confirmed.", src: ["yonhap22", "ohCoach"] },
@@ -320,5 +334,5 @@ window.IY = (function () {
     next: { name: "Buick LPGA Shanghai", start: "2026-10-15", end: "2026-10-18" }
   };
 
-  return { SOURCES, profile, photos, stats, bio, timeline, deepCuts, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
+  return { SOURCES, profile, photos, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
 })();

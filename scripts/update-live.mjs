@@ -47,7 +47,37 @@ function lineOf(ev) {
   };
 }
 
-export function buildLive(overview, picked, nowIso) {
+// ESPN's athlete overview does not move during a round (seen Oct 4, 2026: still "Scheduled, thru 0"
+// forty minutes after she teed off). The per-competitor "core" endpoints are live, so they win when present.
+const parsePar = (d) => (d === "E" ? 0 : Number.parseInt(d, 10));
+const fmtPar = (n) => (n === 0 ? "E" : n > 0 ? `+${n}` : String(n));
+
+export function applyCore(out, core) {
+  const st = core?.status;
+  const items = (core?.lines?.items || []).filter((i) => typeof i.value === "number" && i.value > 0);
+  if (!st || !st.type) return out;
+  const state = st.type.state || out.state;
+  const period = st.period ?? out.round;
+  out.state = state;
+  out.round = period;
+  out.thru = st.thru ?? out.thru;
+  if (st.teeTime) out.teeTime = new Date(st.teeTime).toISOString();
+  const pos = st.position?.displayName;
+  if (pos && pos !== "-") out.position = pos;
+  if (items.length) {
+    const pars = items.map((i) => parsePar(i.displayValue));
+    if (pars.every((n) => Number.isFinite(n))) out.toPar = fmtPar(pars.reduce((a, b) => a + b, 0));
+    out.total = items.reduce((a, i) => a + i.value, 0);
+    const live = state === "in" ? items.find((i) => i.period === period) : null;
+    out.rounds = items.filter((i) => i !== live).map((i) => i.value);
+    out.today = live ? live.displayValue : "";
+  }
+  if (st.type.name === "STATUS_CUT") { out.statusText = "missed the cut"; out.state = "post"; }
+  if (st.type.completed === true || st.type.name === "STATUS_FINISH") out.state = "post";
+  return out;
+}
+
+export function buildLive(overview, picked, nowIso, core) {
   const stats = [...(overview?.recentTournaments?.[0]?.eventsStats || [])].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   const { current, next } = picked;
   const entry = current ? stats.find((e) => String(e.id) === current.id) : null;
@@ -74,6 +104,7 @@ export function buildLive(overview, picked, nowIso) {
   // A finished round reads as "pre" until the next tee time; once the event is over, call it final.
   if (entry && current && type.state !== "in" && Date.parse(nowIso) > current.end.getTime() + 1.25 * DAY) out.state = "post";
   if (type.completed === true || type.name === "STATUS_FINISH") out.state = "post";
+  if (entry && core) applyCore(out, core);
   return out;
 }
 
@@ -82,7 +113,13 @@ async function main() {
   const board = await getJson(`https://site.api.espn.com/apis/site/v2/sports/golf/lpga/scoreboard?dates=${ymd(now).replaceAll("-", "")}`);
   const picked = pickEvents(board?.leagues?.[0]?.calendar, now.getTime());
   const overview = await getJson(`https://site.web.api.espn.com/apis/common/v3/sports/golf/lpga/athletes/${ATHLETE}/overview`);
-  const live = buildLive(overview, picked, now.toISOString());
+  let core = null;
+  if (picked.current) {
+    const base = `https://sports.core.api.espn.com/v2/sports/golf/leagues/lpga/events/${picked.current.id}/competitions/${picked.current.id}/competitors/${ATHLETE}`;
+    try { core = { status: await getJson(`${base}/status`), lines: await getJson(`${base}/linescores`) }; }
+    catch (e) { console.log("Core endpoints unavailable, using overview only:", e.message); }
+  }
+  const live = buildLive(overview, picked, now.toISOString(), core);
 
   let old = null;
   try { old = JSON.parse(await readFile(OUT, "utf8")); } catch {}
