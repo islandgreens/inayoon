@@ -76,16 +76,41 @@
     var showCounts = function (c) {
       cCount.textContent = num(c.week) + (c.week === 1 ? " cheer" : " cheers") + " this week \u00b7 " + num(c.total) + " all time";
     };
+    /* Fireworks: particles fly out from the button across the screen, then fall and fade. */
     var burst = function () {
-      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      for (var i = 0; i < 12; i++) {
-        var dot = el("i", { class: "dot" + (i % 3 === 0 ? " y" : "") });
-        var ang = (Math.PI * 2 * i) / 12, dist = 34 + (i % 4) * 9;
-        dot.style.setProperty("--dx", Math.round(Math.cos(ang) * dist) + "px");
-        dot.style.setProperty("--dy", Math.round(Math.sin(ang) * dist) + "px");
-        cBtn.appendChild(dot);
-        (function (d) { setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 700); })(dot);
+      var r = cBtn.getBoundingClientRect();
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var layer = el("div", { class: "fx", "aria-hidden": "true" });
+      document.body.appendChild(layer);
+      var colors = ["#FF5FA2", "#FF8FC0", "#FFD84A", "#FFFFFF", "#FF5FA2"];
+      var count = calm ? 16 : 70, longest = 0;
+      for (var i = 0; i < count; i++) {
+        var size = 8 + Math.round(Math.random() * 10);
+        var p = el("i", { class: "fx-p" + (i % 5 === 0 ? " ring" : "") });
+        p.style.width = p.style.height = size + "px";
+        p.style.left = (cx - size / 2) + "px";
+        p.style.top = (cy - size / 2) + "px";
+        p.style.color = colors[i % colors.length];
+        layer.appendChild(p);
+        var ang = Math.random() * Math.PI * 2;
+        var dist = calm ? 40 + Math.random() * 50 : 110 + Math.random() * 330;
+        var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - (calm ? 0 : 60);
+        var dur = calm ? 900 : 1200 + Math.random() * 800;
+        longest = Math.max(longest, dur);
+        if (!p.animate) continue;
+        if (calm) {
+          p.style.transform = "translate(" + dx + "px," + dy + "px)";
+          p.animate([{ opacity: 0 }, { opacity: 1, offset: 0.3 }, { opacity: 0 }], { duration: dur, fill: "forwards" });
+        } else {
+          p.animate([
+            { transform: "translate(0,0) scale(0.4)", opacity: 1 },
+            { transform: "translate(" + dx + "px," + dy + "px) scale(1)", opacity: 1, offset: 0.6, easing: "ease-in" },
+            { transform: "translate(" + (dx * 1.08) + "px," + (dy + 90) + "px) scale(0.5)", opacity: 0 }
+          ], { duration: dur, easing: "cubic-bezier(0.1, 0.7, 0.3, 1)", fill: "forwards" });
+        }
       }
+      setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); }, longest + 150);
     };
     cBtn.addEventListener("click", function () {
       if (busy) return;

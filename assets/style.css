@@ -254,9 +254,9 @@ h1.page-title { font-size: clamp(30px, 4.5vw, 44px); margin-top: 6px; }
 .cheer-btn:active { transform: scale(0.95); }
 .cheer-btn:disabled { cursor: default; opacity: 0.85; }
 .cheer-btn .spark { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 3px var(--ink); }
-.cheer-btn .dot { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--pink-soft); pointer-events: none; animation: cheer-pop 0.65s ease-out forwards; }
-.cheer-btn .dot.y { background: var(--yellow); }
-@keyframes cheer-pop { to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; } }
+.fx { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
+.fx-p { position: absolute; border-radius: 50%; background: currentColor; opacity: 0; will-change: transform, opacity; }
+.fx-p.ring { background: transparent; border: 2px solid currentColor; }
 .cheer-text { flex: 1 1 220px; min-width: 0; }
 .cheer-count { margin: 0; font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
 .cheer-note { margin: 2px 0 0; font-size: 13px; color: var(--muted); min-height: 1.3em; }

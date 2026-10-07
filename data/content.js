@@ -1,6 +1,6 @@
 /* Ina Yoon fan page content. Facts carry source ids from SOURCES (videos, schedule and live data do not).
    Edit this file to update the page; layout code never needs to change.
-   Content verified on: 2026-10-07 (v7). */
+   Content verified on: 2026-10-07 (v8). */
 window.IY = (function () {
   const SOURCES = {
     wiki: { label: "Wikipedia: Ina Yoon", url: "https://en.wikipedia.org/wiki/Ina_Yoon" },
