@@ -66,6 +66,49 @@
     photo($("photo"), "main", "photo");
   }
 
+  /* Cheer button: shared counter kept by the Cloudflare Worker. Hidden until D.api is set. */
+  if ($("cheer") && D.api) {
+    var cheerBox = $("cheer"), busy = false;
+    var num = function (n) { return Number(n || 0).toLocaleString("en-US"); };
+    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "spark", "aria-hidden": "true" }), "Send a cheer"]);
+    var cCount = el("p", { class: "cheer-count", "aria-live": "polite" });
+    var cNote = el("p", { class: "cheer-note" });
+    var showCounts = function (c) {
+      cCount.textContent = num(c.week) + (c.week === 1 ? " cheer" : " cheers") + " this week \u00b7 " + num(c.total) + " all time";
+    };
+    var burst = function () {
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      for (var i = 0; i < 12; i++) {
+        var dot = el("i", { class: "dot" + (i % 3 === 0 ? " y" : "") });
+        var ang = (Math.PI * 2 * i) / 12, dist = 34 + (i % 4) * 9;
+        dot.style.setProperty("--dx", Math.round(Math.cos(ang) * dist) + "px");
+        dot.style.setProperty("--dy", Math.round(Math.sin(ang) * dist) + "px");
+        cBtn.appendChild(dot);
+        (function (d) { setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 700); })(dot);
+      }
+    };
+    cBtn.addEventListener("click", function () {
+      if (busy) return;
+      busy = true; cBtn.disabled = true;
+      fetch(D.api + "/cheers", { method: "POST" })
+        .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
+        .then(function (res) {
+          if (typeof res.j.total === "number") showCounts(res.j);
+          if (res.status === 200) { burst(); cNote.textContent = "Thanks. She can probably hear you from here."; }
+          else if (res.status === 429) cNote.textContent = "That is plenty for now. Come back in a bit.";
+          else cNote.textContent = "Cheers are resting. Try again later.";
+        })
+        .catch(function () { cNote.textContent = "Cheers are resting. Try again later."; })
+        .then(function () { setTimeout(function () { busy = false; cBtn.disabled = false; }, 900); });
+    });
+    cheerBox.appendChild(cBtn);
+    cheerBox.appendChild(el("div", { class: "cheer-text" }, [cCount, cNote]));
+    fetch(D.api + "/cheers")
+      .then(function (r) { if (!r.ok) throw new Error("bad status"); return r.json(); })
+      .then(function (c) { showCounts(c); cheerBox.hidden = false; })
+      .catch(function () { /* Worker unreachable: keep the section hidden */ });
+  }
+
   /* Stats */
   if ($("stats")) D.stats.forEach(function (s) {
     $("stats").appendChild(el("div", { class: "stat " + s.tone }, [
@@ -252,7 +295,7 @@
       $("source-groups").appendChild(el("section", { class: "sgroup" }, [el("h3", { text: g[0] }), ul]));
     });
   }
-  if ($("verified")) $("verified").textContent = "Content last verified October 4, 2026.";
+  if ($("verified")) $("verified").textContent = "Content last verified October 7, 2026.";
 
   /* Live card */
   if (!$("live")) return;

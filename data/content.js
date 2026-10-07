@@ -1,6 +1,6 @@
 /* Ina Yoon fan page content. Facts carry source ids from SOURCES (videos, schedule and live data do not).
    Edit this file to update the page; layout code never needs to change.
-   Content verified on: 2026-10-04 (v2). */
+   Content verified on: 2026-10-07 (v7). */
 window.IY = (function () {
   const SOURCES = {
     wiki: { label: "Wikipedia: Ina Yoon", url: "https://en.wikipedia.org/wiki/Ina_Yoon" },
@@ -95,17 +95,21 @@ window.IY = (function () {
     story: { src: "assets/ina-portrait.jpg", alt: "Studio portrait of Ina Yoon holding an iron", credit: "" }
   };
 
+  /* Cloudflare Worker address, for example "https://inayoon-api.yourname.workers.dev" (no slash at the end).
+     While this is empty the cheer button stays hidden. */
+  const api = "https://inayoon-api.digitaldarkmatter.workers.dev";
+
   const stats = [
-    { v: "23", k: "Rolex world ranking", note: "Week 39, 2026", src: ["rolex"], tone: "yellow" },
-    { v: "12th", k: "Race to CME Globe", note: "Before the LOTTE Championship", src: ["cme"], tone: "pink" },
-    { v: "$2.1M", k: "2026 official earnings", note: "Before the LOTTE Championship", src: ["lpgaResults"], tone: "yellow" },
+    { v: "17", k: "Rolex world ranking", note: "Week 40, 2026", src: ["rolex"], tone: "yellow" },
+    { v: "7th", k: "Race to CME Globe", note: "After the LOTTE Championship", src: ["cme"], tone: "pink" },
+    { v: "$2.4M", k: "2026 official earnings", note: "After the LOTTE Championship", src: ["lpgaResults"], tone: "yellow" },
     { v: "277.5", k: "Driving yards, 8th on tour", note: "As of July 8, 2026", src: ["dist26"], tone: "pink" }
   ];
 
   const bio = [
     { t: "Ina Yoon was born in Seoul and grew up in South Gyeongsang province after her parents moved to Sacheon. She took up golf at 10, tagging along with her father, and by her third year of middle school she had won the Korean Women's Amateur and earned a place on the national team.", src: ["newsis22", "donga22feb"] },
     { t: "She turned professional in 2021, topped the second-tier Dream Tour money list, and won on the KLPGA Tour as a rookie in July 2022, going wire to wire at 20 under par. In 2024 she swept the KLPGA's Player of the Year, money and scoring titles, then finished eighth at LPGA Q-Series to earn her card.", src: ["usga", "kjdWin22", "kjdAwards", "kjdQ"] },
-    { t: "Her 2025 rookie season in the United States was a grind: one top 10 in 26 starts. In 2026 it clicked. She finished fourth in Los Angeles, tied for fourth at the Chevron Championship, and led the KPMG Women's PGA Championship by five shots at halfway after a record-tying 63 before finishing second.", src: ["kjd2025", "gnnChevron", "gc63", "apLead", "gnnKpmg"] }
+    { t: "Her 2025 rookie season in the United States was a grind: one top 10 in 26 starts. In 2026 it clicked. She finished fourth in Los Angeles, tied for fourth at the Chevron Championship, and led the KPMG Women's PGA Championship by five shots at halfway after a record-tying 63 before finishing second. In October she was runner-up again, at the LOTTE Championship in Hawaii.", src: ["kjd2025", "gnnChevron", "gc63", "apLead", "gnnKpmg", "rolex"] }
   ];
 
   const timeline = [
@@ -122,6 +126,7 @@ window.IY = (function () {
     { y: "2025", t: "LPGA rookie season: 26 starts, best finish tied 10th, 63rd in CME points.", src: ["kjd2025"] },
     { y: "Apr 2026", t: "Solo fourth at the JM Eagle LA Championship, then tied fourth at the Chevron Championship, her best major finish at that point.", src: ["gnnChevron"] },
     { y: "Jun 2026", t: "Opens the KPMG Women's PGA with a record-tying 63, leads by five at halfway and finishes runner-up.", src: ["gc63", "apLead", "gnnKpmg"] },
+    { y: "Oct 2026", t: "Finishes solo second at the LOTTE Championship in Hawaii at 18 under par, her second runner-up finish of the season.", src: ["rolex", "espn"] },
     { y: "Nov 2026", t: "Set to join Boston Common Golf in WTGL, the women's simulator league, as its only Korean player.", src: ["kjdWtgl", "ilganWtgl"] }
   ];
 
@@ -208,9 +213,9 @@ window.IY = (function () {
   const results = {
     "2026": {
       note: "17 starts through the LOTTE Championship. Rows marked * are awaiting a second check of their round scores or to-par figure.",
-      liveEvent: "401835171",
+      liveEvent: "",
       rows: [
-        ["Oct 1 to 4", "LOTTE Championship", "In progress", "66 67 69", "-14", "", "live"],
+        ["Oct 1 to 4", "LOTTE Championship", "2", "66 67 69 68", "-18", "$277,738", ""],
         ["Sep 25 to 27", "Walmart NW Arkansas Championship", "CUT", "71 70", "-1", "$0", ""],
         ["Aug 27 to 30", "FM Championship", "T44", "74 70 71 73", "E", "$18,239", ""],
         ["Jul 30 to Aug 2", "AIG Women's Open", "CUT", "74 74", "+6", "$0", "md"],
@@ -326,13 +331,13 @@ window.IY = (function () {
 
   /* Shown when data/live.json cannot be loaded (for example when the page is opened from disk). */
   const liveFallback = {
-    updated: "2026-10-04T20:20:00Z",
-    state: "pre",
+    updated: "2026-10-06T00:23:00Z",
+    state: "post",
     event: { id: "401835171", name: "LOTTE Championship pres. by Hoakalei", start: "2026-10-01", end: "2026-10-04", course: "Hoakalei Country Club" },
-    position: "T2", toPar: "-14", total: 202, round: 4, thru: 0,
-    teeTime: "2026-10-04T22:55:00Z", rounds: [66, 67, 69], statusText: "",
+    position: "2", toPar: "-18", total: 270, round: 4, thru: 18,
+    teeTime: null, rounds: [66, 67, 69, 68], statusText: "",
     next: { name: "Buick LPGA Shanghai", start: "2026-10-15", end: "2026-10-18" }
   };
 
-  return { SOURCES, profile, photos, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
+  return { SOURCES, profile, photos, api, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
 })();

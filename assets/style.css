@@ -236,3 +236,27 @@ h1.page-title { font-size: clamp(30px, 4.5vw, 44px); margin-top: 6px; }
 .fan-tile .k { display: block; font-size: 14px; margin-top: 4px; }
 .fan-tile .n { display: block; font-size: 12px; color: var(--muted); }
 @media (max-width: 860px) { .fan { grid-template-columns: minmax(0, 1fr); padding: 20px; } }
+
+/* v5: keep the menu on one line on phones */
+@media (max-width: 560px) {
+  .top-in { flex-wrap: wrap; }
+  .top nav { flex: 1 1 100%; flex-wrap: nowrap; justify-content: space-between; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .top nav::-webkit-scrollbar { display: none; }
+  .top nav a { white-space: nowrap; padding: 10px 6px; font-size: 13px; }
+}
+@media (max-width: 380px) { .top nav a { font-size: 12px; padding: 10px 5px; } }
+
+/* v6: cheer button */
+.cheer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin: 0 0 16px; padding: 14px 18px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+.cheer[hidden] { display: none; }
+.cheer-btn { position: relative; font: inherit; font-family: var(--display); font-weight: 800; font-size: 17px; color: var(--ink); background: var(--pink); border: 0; border-radius: 999px; padding: 12px 22px; min-height: 46px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: transform 0.12s ease; }
+.cheer-btn:hover { background: var(--pink-soft); }
+.cheer-btn:active { transform: scale(0.95); }
+.cheer-btn:disabled { cursor: default; opacity: 0.85; }
+.cheer-btn .spark { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 3px var(--ink); }
+.cheer-btn .dot { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--pink-soft); pointer-events: none; animation: cheer-pop 0.65s ease-out forwards; }
+.cheer-btn .dot.y { background: var(--yellow); }
+@keyframes cheer-pop { to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; } }
+.cheer-text { flex: 1 1 220px; min-width: 0; }
+.cheer-count { margin: 0; font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
+.cheer-note { margin: 2px 0 0; font-size: 13px; color: var(--muted); min-height: 1.3em; }
