@@ -267,3 +267,12 @@ h1.page-title { font-size: clamp(30px, 4.5vw, 44px); margin-top: 6px; }
 .live .cd-note { font-size: 12.5px; margin: 10px 0 0; }
 .live .last { font-size: 14px; font-weight: 500; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid rgba(23, 19, 46, 0.25); }
 #ver { font-family: var(--mono); font-size: 11px; opacity: 0.75; }
+
+/* v10: favorites row and the all-videos page */
+.videos.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+h3.sub.tight { margin-top: 8px; }
+h2.year { font-family: var(--mono); font-weight: 500; font-size: 14px; letter-spacing: 0.12em; color: var(--yellow); margin: 36px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h2.year:first-child { margin-top: 8px; }
+#fav-block[hidden] { display: none; }
+@media (max-width: 860px) { .videos.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .videos.four { grid-template-columns: minmax(0, 1fr); } }

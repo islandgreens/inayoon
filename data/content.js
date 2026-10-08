@@ -1,6 +1,6 @@
 /* Ina Yoon fan page content. Facts carry source ids from SOURCES (videos, schedule and live data do not).
    Edit this file to update the page; layout code never needs to change.
-   Content verified on: 2026-10-07 (v9). */
+   Content verified on: 2026-10-07 (v10). */
 window.IY = (function () {
   const SOURCES = {
     wiki: { label: "Wikipedia: Ina Yoon", url: "https://en.wikipedia.org/wiki/Ina_Yoon" },
@@ -100,7 +100,7 @@ window.IY = (function () {
   const api = "https://inayoon-api.digitaldarkmatter.workers.dev";
 
   /* Shown small in the footer of every page. Bump once per build, to match the zip. */
-  const version = "v9";
+  const version = "v10";
 
   /* Shown after a cheer. Picked at random, never the same one twice in a row. */
   const cheerLines = [
@@ -316,21 +316,27 @@ window.IY = (function () {
   };
 
   /* Videos are sorted newest first on the page, by the date of the event shown.
+     fav: true puts a video in the "Fan favorites" row on the home page for good.
+     The home page shows the favorites plus the 12 newest others; videos.html shows everything.
+     When the same round exists in English and Korean, use the English one (owner rule).
      Checked October 4, 2026: each plays embedded. Three earlier picks (two NBC Sports, one KBS)
      were removed because their owners block them outside their home countries. */
   const videos = [
+    { id: "8W_WwS1OWY8", date: "2026-10-06", t: "Up to world No. 17", c: "Yonhap News TV", d: "News report after the LOTTE Championship (Korean)" },
+    { id: "89SaYv2669o", date: "2026-10-04", t: "Runner-up in Hawaii", c: "LPGA", d: "LOTTE Championship, final round" },
     { id: "UN23oGCc--Q", date: "2026-10-01", t: "Opening 66 in Hawaii", c: "LPGA Korea", d: "LOTTE Championship, round 1 (Korean)" },
     { id: "3nBOLJl3VA0", date: "2026-07-24", t: "A 68 on the Scottish links", c: "LPGA Korea", d: "ISPS Handa Women's Scottish Open, round 2 (Korean)" },
     { id: "awlBSAFpHjA", date: "2026-06-28", t: "Final round at Hazeltine", c: "LPGA Korea", d: "KPMG Women's PGA, final round (Korean)" },
-    { id: "xBig9IETevE", date: "2026-06-26", t: "Five clear at halfway", c: "LPGA Korea", d: "KPMG Women's PGA, round 2 (Korean)" },
-    { id: "c8atS-iT2tg", date: "2026-06-25", t: "The record-tying 63 at Hazeltine", c: "LPGA", d: "KPMG Women's PGA, round 1" },
+    { id: "YPAg6NiyB-E", date: "2026-06-26", t: "Five clear at halfway", c: "LPGA", d: "KPMG Women's PGA, round 2" },
+    { id: "c8atS-iT2tg", date: "2026-06-25", t: "The record-tying 63 at Hazeltine", c: "LPGA", d: "KPMG Women's PGA, round 1", fav: true },
+    { id: "xWBMzbsZ-DU", date: "2026-04-26", t: "Closing 68 at the Chevron", c: "LPGA Korea", d: "Chevron Championship, final round (Korean)" },
     { id: "OMJ4E1ObqG8", date: "2026-04-25", t: "Round 3 at the Chevron", c: "LPGA Korea", d: "Chevron Championship, round 3 (Korean)" },
     { id: "a-v4raIKHuA", date: "2026-04-24", t: "Round 2 at the Chevron", c: "LPGA Korea", d: "Chevron Championship, round 2 (Korean)" },
     { id: "MYqDOl1mqVo", date: "2026-04-18", t: "Moving day in Los Angeles", c: "LPGA Korea", d: "JM Eagle LA Championship, round 3 (Korean)" },
-    { id: "WIm01zaJYSI", date: "2024-12-11", t: "The moment she earned her LPGA card", c: "SBS Golf", d: "After LPGA Q-Series (Korean)" },
-    { id: "0O_A8gU1oYk", date: "2024-08-04", t: "Every shot of the comeback win", c: "SBS Golf", d: "Jeju Samdasoo Masters (Korean)" },
+    { id: "WIm01zaJYSI", date: "2024-12-11", t: "The moment she earned her LPGA card", c: "SBS Golf", d: "After LPGA Q-Series (Korean)", fav: true },
+    { id: "0O_A8gU1oYk", date: "2024-08-04", t: "Every shot of the comeback win", c: "SBS Golf", d: "Jeju Samdasoo Masters (Korean)", fav: true },
     { id: "M_SRKzqQIJ0", date: "2024-04-11", t: "Leading a week after her return", c: "SBS Golf", d: "Mediheal Hankook Ilbo Championship, round 1 (Korean)" },
-    { id: "2e9bxJlyyBQ", date: "2022-07-17", t: "The first win", c: "SBS Golf", d: "Evercollagen Queens Crown, final round (Korean)" },
+    { id: "2e9bxJlyyBQ", date: "2022-07-17", t: "The first win", c: "SBS Golf", d: "Evercollagen Queens Crown, final round (Korean)", fav: true },
     { id: "myGD8Veikk0", date: "2022-07-03", t: "4D driver swing analysis", c: "SBS Golf", d: "With two other players (Korean)" }
   ];
 

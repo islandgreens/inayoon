@@ -278,26 +278,49 @@
   }
 
   /* Videos: newest first by event date. Thumbnail first, player loads only on click. */
-  if ($("videos")) {
-    D.videos.slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); }).forEach(function (v) {
-      var frame = el("div", { class: "frame" });
-      var btn = el("button", { type: "button", "aria-label": "Play video: " + v.t }, [
-        el("img", { src: "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg", alt: "", loading: "lazy" }),
-        el("span", { class: "play", text: "▶ Play" })
-      ]);
-      btn.addEventListener("click", function () {
-        frame.removeChild(btn);
-        frame.appendChild(el("iframe", {
-          src: "https://www.youtube-nocookie.com/embed/" + v.id + "?autoplay=1&rel=0",
-          title: v.t, allow: "accelerometer; autoplay; encrypted-media; picture-in-picture", allowfullscreen: ""
-        }));
-      });
-      frame.appendChild(btn);
-      $("videos").appendChild(el("div", { class: "vid" }, [
-        frame, el("span", { class: "vdate", text: fmtDate(v.date) }), el("h4", { text: v.t }),
-        el("p", null, [v.c + " · " + v.d + " · ", ext("https://www.youtube.com/watch?v=" + v.id, "Open on YouTube")])
-      ]));
+  var HOME_LATEST = 12;
+  function videoCard(v) {
+    var frame = el("div", { class: "frame" });
+    var btn = el("button", { type: "button", "aria-label": "Play video: " + v.t }, [
+      el("img", { src: "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg", alt: "", loading: "lazy" }),
+      el("span", { class: "play", text: "\u25B6 Play" })
+    ]);
+    btn.addEventListener("click", function () {
+      frame.removeChild(btn);
+      frame.appendChild(el("iframe", {
+        src: "https://www.youtube-nocookie.com/embed/" + v.id + "?autoplay=1&rel=0",
+        title: v.t, allow: "accelerometer; autoplay; encrypted-media; picture-in-picture", allowfullscreen: ""
+      }));
     });
+    frame.appendChild(btn);
+    return el("div", { class: "vid" }, [
+      frame, el("span", { class: "vdate", text: fmtDate(v.date) }), el("h4", { text: v.t }),
+      el("p", null, [v.c + " \u00b7 " + v.d + " \u00b7 ", ext("https://www.youtube.com/watch?v=" + v.id, "Open on YouTube")])
+    ]);
+  }
+  var allVideos = D.videos.slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+  if ($("videos")) {
+    /* Home page: favorites in their own row, then the newest of the rest */
+    var favs = allVideos.filter(function (v) { return v.fav; });
+    var rest = allVideos.filter(function (v) { return !v.fav; });
+    if ($("videos-fav")) {
+      if (favs.length) favs.forEach(function (v) { $("videos-fav").appendChild(videoCard(v)); });
+      else $("fav-block").hidden = true;
+    } else rest = allVideos;
+    rest.slice(0, HOME_LATEST).forEach(function (v) { $("videos").appendChild(videoCard(v)); });
+    if ($("videos-more")) $("videos-more").textContent = "See all " + allVideos.length + " videos";
+  }
+  if ($("videos-all")) {
+    /* Videos page: everything, grouped by year */
+    var years = [];
+    allVideos.forEach(function (v) { var y = String(v.date).slice(0, 4); if (years.indexOf(y) < 0) years.push(y); });
+    years.forEach(function (y) {
+      var grid = el("div", { class: "videos" });
+      allVideos.filter(function (v) { return String(v.date).slice(0, 4) === y; }).forEach(function (v) { grid.appendChild(videoCard(v)); });
+      $("videos-all").appendChild(el("h2", { class: "year", text: y }));
+      $("videos-all").appendChild(grid);
+    });
+    if ($("videos-count")) $("videos-count").textContent = allVideos.length + " videos, newest first. They play from the official and broadcaster channels on YouTube, and many are in Korean.";
   }
   if ($("links")) D.links.forEach(function (l) {
     $("links").appendChild(el("a", { class: "link", href: l.url, target: "_blank", rel: "noopener" }, [el("b", { text: l.h }), el("span", { text: l.t })]));
