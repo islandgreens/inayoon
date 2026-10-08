@@ -53,9 +53,11 @@ h1 span { color: var(--pink); }
 .live .where { font-size: 14px; font-weight: 500; margin: 0; }
 .live .nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
 .live .num { background: var(--ink); color: var(--text); border-radius: 12px; padding: 12px 8px; text-align: center; }
-.live .num b { display: block; font-family: var(--display); font-weight: 800; font-size: 34px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.live .num { container-type: inline-size; min-width: 0; overflow: hidden; }
+.live .num b { display: block; font-family: var(--display); font-weight: 800; font-size: 28px; font-size: min(34px, 34cqw); line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .live .num.hi b { color: var(--yellow); }
-.live .num.sm b { font-size: 24px; line-height: 1.5; white-space: nowrap; }
+/* The tee time is the longest value a tile holds ("10:55 PM"), so it scales with the tile width */
+.live .num.sm b { font-size: 15px; font-size: min(24px, 19cqw); line-height: 1.5; }
 .live .num span { display: block; font-family: var(--mono); font-size: 10.5px; line-height: 1.4; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .live .rounds { font-family: var(--mono); font-size: 14px; margin: 14px 0 0; }
 .live .meta { font-size: 13px; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; }
@@ -193,7 +195,6 @@ details ul { margin: 12px 0 0; padding-left: 18px; font-size: 14px; color: var(-
   .top nav a { padding: 10px 9px; font-size: 13px; }
   .top { position: static; }
   .stat b { font-size: 32px; }
-  .live .num b { font-size: 28px; }
   .club { grid-template-columns: 84px minmax(0, 1fr); }
 }
 
@@ -260,3 +261,9 @@ h1.page-title { font-size: clamp(30px, 4.5vw, 44px); margin-top: 6px; }
 .cheer-text { flex: 1 1 220px; min-width: 0; }
 .cheer-count { margin: 0; font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
 .cheer-note { margin: 2px 0 0; font-size: 13px; color: var(--muted); min-height: 1.3em; }
+
+/* v9: countdown and last-result line on the live card */
+.live .cd .num b { color: var(--yellow); }
+.live .cd-note { font-size: 12.5px; margin: 10px 0 0; }
+.live .last { font-size: 14px; font-weight: 500; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid rgba(23, 19, 46, 0.25); }
+#ver { font-family: var(--mono); font-size: 11px; opacity: 0.75; }

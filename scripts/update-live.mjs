@@ -85,7 +85,7 @@ export function buildLive(overview, picked, nowIso, core) {
   const out = {
     updated: nowIso, state: "none", event: null, position: "", toPar: "", total: null,
     round: null, thru: null, teeTime: null, rounds: [], statusText: "",
-    next: next ? { name: next.name, start: ymd(next.start), end: ymd(next.end) } : null,
+    next: next ? { name: next.name, start: ymd(next.start), end: ymd(next.end), startTime: next.start.toISOString() } : null,
     last: null,
   };
   // Her most recent earlier event, so the results table can show its final line.

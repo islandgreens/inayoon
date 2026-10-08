@@ -70,9 +70,16 @@
   if ($("cheer") && D.api) {
     var cheerBox = $("cheer"), busy = false;
     var num = function (n) { return Number(n || 0).toLocaleString("en-US"); };
-    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "spark", "aria-hidden": "true" }), "Send a cheer"]);
+    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "spark", "aria-hidden": "true" }), "Go Ina!"]);
     var cCount = el("p", { class: "cheer-count", "aria-live": "polite" });
     var cNote = el("p", { class: "cheer-note" });
+    var lines = D.cheerLines || ["Cheer sent!"], lastLine = -1;
+    var nextLine = function () {
+      var i = Math.floor(Math.random() * lines.length);
+      if (lines.length > 1 && i === lastLine) i = (i + 1 + Math.floor(Math.random() * (lines.length - 1))) % lines.length;
+      lastLine = i;
+      return lines[i];
+    };
     var showCounts = function (c) {
       cCount.textContent = num(c.week) + (c.week === 1 ? " cheer" : " cheers") + " this week \u00b7 " + num(c.total) + " all time";
     };
@@ -119,8 +126,8 @@
         .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
         .then(function (res) {
           if (typeof res.j.total === "number") showCounts(res.j);
-          if (res.status === 200) { burst(); cNote.textContent = "Thanks. She can probably hear you from here."; }
-          else if (res.status === 429) cNote.textContent = "That is plenty for now. Come back in a bit.";
+          if (res.status === 200) { burst(); cNote.textContent = nextLine(); }
+          else if (res.status === 429) cNote.textContent = "Easy, superfan! Save some voice for the back nine.";
           else cNote.textContent = "Cheers are resting. Try again later.";
         })
         .catch(function () { cNote.textContent = "Cheers are resting. Try again later."; })
@@ -321,6 +328,7 @@
     });
   }
   if ($("verified")) $("verified").textContent = "Content last verified October 7, 2026.";
+  if ($("ver") && D.version) $("ver").textContent = D.version;
 
   /* Live card */
   if (!$("live")) return;
@@ -328,37 +336,115 @@
     try { return new Intl.DateTimeFormat("en-US", Object.assign({ timeZone: "America/New_York" }, opts)).format(new Date(iso)) + " ET"; }
     catch (e) { return ""; }
   }
+  var ticker = null;
+  function parWords(p) {
+    if (!p) return "";
+    if (p === "E") return "even par";
+    var n = Math.abs(parseInt(p, 10));
+    return isNaN(n) ? "" : n + (String(p).charAt(0) === "-" ? " under" : " over");
+  }
+  function shortName(n) { return String(n || "").replace(/ pres\.? by .*$/i, ""); }
+  /* Three ticking tiles. Days, hours, minutes when far off; hours, minutes, seconds inside the last day. */
+  function countdown(target) {
+    var wrap = el("div", { class: "nums cd", role: "timer" });
+    var tiles = [0, 1, 2].map(function () {
+      var b = el("b"), sp = el("span");
+      wrap.appendChild(el("div", { class: "num" }, [b, sp]));
+      return { b: b, sp: sp };
+    });
+    var draw = function () {
+      var ms = Math.max(0, target - Date.now());
+      var d = Math.floor(ms / 86400000), h = Math.floor(ms / 3600000) % 24, m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60;
+      var vals = d > 0 ? [[d, d === 1 ? "day" : "days"], [h, "hrs"], [m, "min"]] : [[h, "hrs"], [m, "min"], [sec, "sec"]];
+      vals.forEach(function (v, i) { tiles[i].b.textContent = String(v[0]); tiles[i].sp.textContent = v[1]; });
+      return ms;
+    };
+    draw();
+    return { node: wrap, draw: draw };
+  }
+  function clock(ms) {
+    var h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60;
+    var two = function (n) { return (n < 10 ? "0" : "") + n; };
+    return (h > 0 ? h + "h " : "") + two(m) + "m " + two(sec) + "s";
+  }
+  function resultLine(E, statusText) {
+    if (!E || !E.name) return "";
+    var pos = E.position || "", where = "the " + shortName(E.name);
+    var n = parseInt(String(pos).replace("T", ""), 10), tied = /^T/.test(pos);
+    var suffix = n % 100 >= 11 && n % 100 <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] || "th");
+    var place = isNaN(n) ? pos : (tied ? "tied " : "") + n + suffix;
+    var lead = pos === "CUT" || statusText ? "missed the cut at " + where : (n === 1 && !tied ? "won " + where : (place ? place + " at " + where : where));
+    var par = parWords(E.toPar), rounds = E.rounds && E.rounds.length ? " (" + E.rounds.join(" · ") + ")" : "";
+    return "Last time out: " + lead + (par ? ", " + par : "") + rounds;
+  }
   function renderLive(L, stale) {
     var box = $("live");
+    if (ticker) { clearInterval(ticker); ticker = null; }
     while (box.firstChild) box.removeChild(box.firstChild);
-    var st = L.state, badge, on = false;
-    if (st === "in") { badge = "On the course now"; on = true; }
-    else if (st === "pre") { badge = "Playing this week"; }
-    else if (st === "post") { badge = "Latest result"; }
-    else { badge = "Off this week"; }
-    box.appendChild(el("span", { class: "badge" }, [el("span", { class: "dot" + (on ? " on" : "") }), "Live scoring · " + badge]));
-
-    if (L.event && st !== "none") {
-      box.appendChild(el("h2", { text: String(L.event.name).replace(/ pres\.? by .*$/i, "") }));
+    var now = Date.now(), st = L.state;
+    var badge = function (text, on) {
+      box.appendChild(el("span", { class: "badge" }, [el("span", { class: "dot" + (on ? " on" : "") }), "Live scoring · " + text]));
+    };
+    var eventHead = function () {
+      box.appendChild(el("h2", { text: shortName(L.event.name) }));
       var days = fmtDay(L.event.start) && fmtDay(L.event.end) ? fmtDay(L.event.start) + " to " + fmtDay(L.event.end) : "";
       box.appendChild(el("p", { class: "where", text: [L.event.course, days].filter(Boolean).join(" · ") }));
-      var third;
-      if (st === "in" && L.today) third = { b: L.today, s: "Today, thru " + (L.thru || 0) };
-      else if (st === "in") third = { b: L.thru ? String(L.thru) : "0", s: "Thru, round " + L.round };
-      else if (st === "pre" && L.teeTime) third = { b: fmtET(L.teeTime, { hour: "numeric", minute: "2-digit" }).replace(" ET", ""), s: "R" + L.round + " tee time, ET", small: true };
-      else third = { b: L.total ? String(L.total) : "", s: "Total strokes" };
+    };
+    var tiles = function (third) {
       box.appendChild(el("div", { class: "nums" }, [
         el("div", { class: "num" }, [el("b", { text: L.position || "" }), el("span", { text: "Position" })]),
         el("div", { class: "num hi" }, [el("b", { text: L.toPar || "" }), el("span", { text: "To par" })]),
         el("div", { class: "num" + (third.small ? " sm" : "") }, [el("b", { text: third.b }), el("span", { text: third.s })])
       ]));
       if (L.rounds && L.rounds.length) box.appendChild(el("p", { class: "rounds", text: "Rounds: " + L.rounds.join(" · ") + (L.statusText ? "  (" + L.statusText + ")" : "") }));
+    };
+    var tee = L.teeTime ? Date.parse(L.teeTime) : NaN;
+    var played = L.rounds && L.rounds.length;
+    var nextAt = L.next && L.next.name ? Date.parse(L.next.startTime || (L.next.start + "T04:00:00Z")) : NaN;
+
+    if (st === "in" && L.event) {
+      badge("On the course now", true);
+      eventHead();
+      tiles(L.today ? { b: L.today, s: "Today, thru " + (L.thru || 0) } : { b: L.thru ? String(L.thru) : "0", s: "Thru, round " + L.round });
+    } else if (st === "pre" && L.event && !played && tee > now) {
+      /* Event week, before her first shot: count down to her tee time */
+      badge("Playing this week", false);
+      eventHead();
+      var c1 = countdown(tee);
+      box.appendChild(c1.node);
+      box.appendChild(el("p", { class: "rounds", text: "Round " + (L.round || 1) + " tee time: " + fmtET(L.teeTime, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) }));
+      ticker = setInterval(function () { if (c1.draw() <= 0) { clearInterval(ticker); ticker = null; } }, 1000);
+    } else if (st === "pre" && L.event) {
+      /* Between rounds */
+      badge("Playing this week", false);
+      eventHead();
+      tiles(L.teeTime ? { b: fmtET(L.teeTime, { hour: "numeric", minute: "2-digit" }).replace(" ET", ""), s: "R" + L.round + " tee time, ET", small: true } : { b: L.total ? String(L.total) : "", s: "Total strokes" });
+      if (tee > now) {
+        var startsIn = el("p", { class: "rounds", role: "timer" });
+        var drawIn = function () { var ms = tee - Date.now(); startsIn.textContent = ms > 0 ? "Round " + L.round + " starts in " + clock(ms) : ""; return ms; };
+        drawIn();
+        box.appendChild(startsIn);
+        ticker = setInterval(function () { if (drawIn() <= 0) { clearInterval(ticker); ticker = null; } }, 1000);
+      }
+    } else if (nextAt > now) {
+      /* Between events: lead with what is next, keep the last result as a smaller line */
+      badge("Between events", false);
+      box.appendChild(el("h2", { text: "Next up: " + shortName(L.next.name) }));
+      box.appendChild(el("p", { class: "where", text: "Next on the LPGA schedule · " + fmtDay(L.next.start) + " to " + fmtDay(L.next.end) }));
+      var c2 = countdown(nextAt);
+      box.appendChild(c2.node);
+      box.appendChild(el("p", { class: "cd-note", text: "Counting down to the first day of the event. Her tee time takes over once pairings are out." }));
+      var last = L.away ? "This week: not in the field at the " + shortName(L.away) + "." : resultLine({ name: L.event && L.event.name, position: L.position, toPar: L.toPar, rounds: L.rounds }, L.statusText);
+      if (last) box.appendChild(el("p", { class: "last", text: last }));
+      ticker = setInterval(function () { if (c2.draw() <= 0) { clearInterval(ticker); ticker = null; } }, 1000);
+    } else if (L.event && st !== "none") {
+      badge("Latest result", false);
+      eventHead();
+      tiles({ b: L.total ? String(L.total) : "", s: "Total strokes" });
     } else {
+      badge("Off this week", false);
       box.appendChild(el("h2", { text: L.away ? "Not in this week's field" : "No tournament this week" }));
-      if (L.away) box.appendChild(el("p", { class: "where", text: "On tour this week: " + L.away }));
-    }
-    if (L.next && L.next.name && st !== "pre" && st !== "in") {
-      box.appendChild(el("p", { class: "rounds", text: "Next on the LPGA schedule: " + L.next.name + ", " + fmtDay(L.next.start) + " to " + fmtDay(L.next.end) }));
+      if (L.away) box.appendChild(el("p", { class: "where", text: "On tour this week: " + shortName(L.away) }));
     }
     box.appendChild(el("p", { class: "meta" }, [
       el("span", { text: (stale ? "Saved snapshot from " : "Score last changed ") + fmtET(L.updated, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) }),

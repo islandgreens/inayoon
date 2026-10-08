@@ -1,6 +1,6 @@
 /* Ina Yoon fan page content. Facts carry source ids from SOURCES (videos, schedule and live data do not).
    Edit this file to update the page; layout code never needs to change.
-   Content verified on: 2026-10-07 (v8). */
+   Content verified on: 2026-10-07 (v9). */
 window.IY = (function () {
   const SOURCES = {
     wiki: { label: "Wikipedia: Ina Yoon", url: "https://en.wikipedia.org/wiki/Ina_Yoon" },
@@ -98,6 +98,20 @@ window.IY = (function () {
   /* Cloudflare Worker address, for example "https://inayoon-api.yourname.workers.dev" (no slash at the end).
      While this is empty the cheer button stays hidden. */
   const api = "https://inayoon-api.digitaldarkmatter.workers.dev";
+
+  /* Shown small in the footer of every page. Bump once per build, to match the zip. */
+  const version = "v9";
+
+  /* Shown after a cheer. Picked at random, never the same one twice in a row. */
+  const cheerLines = [
+    "Cheer sent! Shine on, Ina!",
+    "Boom! That one carried 300 yards.",
+    "Yoon Ina, Bitina, fighting!",
+    "Bang! Just the sound she likes.",
+    "Shine, shine in the world!",
+    "Pink army reporting for duty!",
+    "83 meters to the pin. Perfect!"
+  ];
 
   const stats = [
     { v: "17", k: "Rolex world ranking", note: "Week 40, 2026", src: ["rolex"], tone: "yellow" },
@@ -336,8 +350,8 @@ window.IY = (function () {
     event: { id: "401835171", name: "LOTTE Championship pres. by Hoakalei", start: "2026-10-01", end: "2026-10-04", course: "Hoakalei Country Club" },
     position: "2", toPar: "-18", total: 270, round: 4, thru: 18,
     teeTime: null, rounds: [66, 67, 69, 68], statusText: "",
-    next: { name: "Buick LPGA Shanghai", start: "2026-10-15", end: "2026-10-18" }
+    next: { name: "Buick LPGA Shanghai", start: "2026-10-15", end: "2026-10-18", startTime: "2026-10-15T04:00:00.000Z" }
   };
 
-  return { SOURCES, profile, photos, api, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
+  return { SOURCES, profile, photos, api, version, cheerLines, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
 })();
