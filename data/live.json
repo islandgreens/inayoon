@@ -1,9 +1,41 @@
 {
-  "updated": "2026-10-06T00:23:04.868Z",
+  "updated": "2026-10-09T05:55:57.082Z",
   "state": "post",
-  "event": { "id": "401835171", "name": "LOTTE Championship pres. by Hoakalei", "start": "2026-10-01", "end": "2026-10-04", "course": "Hoakalei Country Club" },
-  "position": "2", "toPar": "-18", "total": 270, "round": 4, "thru": 18,
-  "teeTime": "2026-10-04T22:55:00.000Z", "rounds": [66, 67, 69, 68], "statusText": "",
-  "next": { "name": "Buick LPGA Shanghai", "start": "2026-10-15", "end": "2026-10-18" },
-  "last": { "id": "401835170", "name": "Walmart NW Arkansas Championship pres. by P&G", "position": "CUT", "toPar": "-1", "rounds": [71, 70] }
+  "event": {
+    "id": "401835171",
+    "name": "LOTTE Championship pres. by Hoakalei",
+    "start": "2026-10-01",
+    "end": "2026-10-04",
+    "course": "Hoakalei Country Club",
+    "numberOfRounds": 4
+  },
+  "position": "2",
+  "toPar": "-18",
+  "total": 270,
+  "round": 4,
+  "thru": 18,
+  "teeTime": "2026-10-04T22:55:00.000Z",
+  "rounds": [
+    66,
+    67,
+    69,
+    68
+  ],
+  "statusText": "",
+  "next": {
+    "name": "Buick LPGA Shanghai",
+    "start": "2026-10-15",
+    "end": "2026-10-18",
+    "startTime": "2026-10-15T07:00:00.000Z"
+  },
+  "last": {
+    "id": "401835170",
+    "name": "Walmart NW Arkansas Championship pres. by P&G",
+    "position": "CUT",
+    "toPar": "-1",
+    "rounds": [
+      71,
+      70
+    ]
+  }
 }
