@@ -62,9 +62,12 @@ async function setup(db) {
   ]);
 }
 
-// ISO week in UTC, for example "2026-W41". A tournament (Thursday to Sunday) always sits inside one week.
+// Week label such as "2026-W41". Weeks start Monday 06:00 Eastern time (daylight saving handled),
+// so a late Sunday final round in Hawaii or on the West Coast still counts toward its own week.
+const EASTERN_DAY = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
 export function weekKey(ms) {
-  const d = new Date(ms);
+  const [y, m, dd] = EASTERN_DAY.format(new Date(ms - 6 * 3600000)).split("-").map(Number);
+  const d = new Date(Date.UTC(y, m - 1, dd));
   const day = (d.getUTCDay() + 6) % 7; // Monday = 0
   const thursday = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - day + 3));
   const jan4 = new Date(Date.UTC(thursday.getUTCFullYear(), 0, 4));

@@ -66,13 +66,22 @@
     photo($("photo"), "main", "photo");
   }
 
-  /* Cheer button: shared counter kept by the Cloudflare Worker. Hidden until D.api is set. */
+  /* Cheer bar: scoreboard, weekly goal and a headline that follows the tournament.
+     Counts come from the Cloudflare Worker; the bar stays hidden until D.api is set and reachable. */
+  var cheerFromLive = null;
   if ($("cheer") && D.api) {
-    var cheerBox = $("cheer"), busy = false;
+    var cheerBox = $("cheer"), busy = false, weekCount = 0, liveForCheer = null;
+    var GOAL = D.cheerGoal || 100, H = D.cheerHeadlines || {};
     var num = function (n) { return Number(n || 0).toLocaleString("en-US"); };
-    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "spark", "aria-hidden": "true" }), "Go Ina!"]);
-    var cCount = el("p", { class: "cheer-count", "aria-live": "polite" });
-    var cNote = el("p", { class: "cheer-note" });
+    var fill = function (t) { return String(t || "").replace(/\{goal\}/g, num(GOAL)); };
+    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "ball", "aria-hidden": "true" }), "Go Ina!"]);
+    var board = el("div", { class: "board", "aria-hidden": "true" });
+    var boardWrap = el("div", { class: "board-wrap" }, [board, el("span", { class: "board-label", text: "Cheers this week" })]);
+    var cHead = el("p", { class: "cheer-head" });
+    var cSub = el("p", { class: "cheer-sub" });
+    var bar = el("div", { class: "goal-bar", role: "progressbar", "aria-valuemin": "0", "aria-valuemax": String(GOAL) }, [el("i")]);
+    var cMeta = el("p", { class: "cheer-meta" });
+    var cNote = el("p", { class: "cheer-note", "aria-live": "polite" });
     var lines = D.cheerLines || ["Cheer sent!"], lastLine = -1;
     var nextLine = function () {
       var i = Math.floor(Math.random() * lines.length);
@@ -80,8 +89,55 @@
       lastLine = i;
       return lines[i];
     };
+    var WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var placeWords = function (pos) {
+      var n = parseInt(String(pos || "").replace("T", ""), 10);
+      if (isNaN(n)) return "";
+      var suffix = n % 100 >= 11 && n % 100 <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] || "th");
+      return (/^T/.test(pos) ? "tied " : "") + n + suffix;
+    };
+    /* Pick the headline and the small line from the live card's data */
+    var headline = function () {
+      var L = liveForCheer, key = "offWeek", sub = "";
+      var nameOf = function (n) { return String(n || "").replace(/ pres\.? by .*$/i, ""); };
+      if (L && L.event && (L.state === "in" || L.state === "pre")) {
+        var R = L.event.numberOfRounds || 4, r = L.round || 1, played = L.rounds && L.rounds.length;
+        if (L.state === "pre" && !played) {
+          key = "preEvent";
+          var start = new Date(String(L.event.start) + "T12:00:00Z");
+          var startsToday = String(L.event.start) <= new Date().toISOString().slice(0, 10);
+          sub = nameOf(L.event.name) + (startsToday ? " starts today" : " starts " + WEEKDAYS[start.getUTCDay()]);
+        } else {
+          key = r >= R ? "finalRound" : ({ 1: "round1", 2: "round2", 3: "round3" })[r] || "round3";
+          sub = L.state === "in" ? (r >= R ? "Final round under way" : "Round " + r + " under way") : (r >= R ? "Final round up next" : "Round " + r + " up next");
+        }
+      } else if (L && L.event && L.state === "post" && Date.now() - Date.parse(String(L.event.end) + "T23:59:00Z") < 3 * 86400000) {
+        key = "afterEvent";
+        sub = L.position === "CUT" || L.statusText ? "She missed the cut at the " + nameOf(L.event.name) : "She finished " + (placeWords(L.position) || L.position) + " at the " + nameOf(L.event.name);
+      } else {
+        key = "offWeek";
+        sub = L && L.next && L.next.name ? "Next up: " + nameOf(L.next.name) + ", " + fmtDay(L.next.start) : "Next event to be announced";
+      }
+      if (weekCount >= GOAL) key = "goalReached";
+      cHead.textContent = fill(H[key]);
+      cSub.textContent = sub;
+    };
     var showCounts = function (c) {
-      cCount.textContent = num(c.week) + (c.week === 1 ? " cheer" : " cheers") + " this week \u00b7 " + num(c.total) + " all time";
+      weekCount = Number(c.week || 0);
+      var digits = String(Math.max(0, weekCount));
+      var padded = digits.length < 3 ? "000".slice(digits.length) + digits : digits;
+      while (board.firstChild) board.removeChild(board.firstChild);
+      padded.split("").forEach(function (d, i) {
+        board.appendChild(el("b", { class: i < padded.length - digits.length ? "dim" : "", text: d }));
+      });
+      boardWrap.setAttribute("aria-label", num(weekCount) + " cheers this week");
+      var pct = Math.min(100, Math.round((weekCount / GOAL) * 100));
+      bar.firstChild.style.width = pct + "%";
+      bar.setAttribute("aria-valuenow", String(Math.min(weekCount, GOAL)));
+      bar.setAttribute("aria-label", num(weekCount) + " of " + num(GOAL) + " cheers");
+      bar.classList.toggle("done", weekCount >= GOAL);
+      cMeta.textContent = num(weekCount) + " of " + num(GOAL) + " \u00b7 " + num(c.total) + " all time";
+      headline();
     };
     /* Fireworks: particles fly out from the button across the screen, then fall and fade. */
     var burst = function () {
@@ -125,7 +181,7 @@
       fetch(D.api + "/cheers", { method: "POST" })
         .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
         .then(function (res) {
-          if (typeof res.j.total === "number") showCounts(res.j);
+          if (typeof res.j.total === "number") { showCounts(res.j); board.classList.remove("bump"); void board.offsetWidth; board.classList.add("bump"); }
           if (res.status === 200) { burst(); cNote.textContent = nextLine(); }
           else if (res.status === 429) cNote.textContent = "Easy, superfan! Save some voice for the back nine.";
           else cNote.textContent = "Cheers are resting. Try again later.";
@@ -133,8 +189,9 @@
         .catch(function () { cNote.textContent = "Cheers are resting. Try again later."; })
         .then(function () { setTimeout(function () { busy = false; cBtn.disabled = false; }, 900); });
     });
-    cheerBox.appendChild(cBtn);
-    cheerBox.appendChild(el("div", { class: "cheer-text" }, [cCount, cNote]));
+    cheerBox.appendChild(el("div", { class: "cheer-left" }, [cBtn, boardWrap]));
+    cheerBox.appendChild(el("div", { class: "cheer-goal" }, [cHead, cSub, bar, el("div", { class: "cheer-foot" }, [cMeta, cNote])]));
+    cheerFromLive = function (L) { liveForCheer = L; headline(); };
     fetch(D.api + "/cheers")
       .then(function (r) { if (!r.ok) throw new Error("bad status"); return r.json(); })
       .then(function (c) { showCounts(c); cheerBox.hidden = false; })
@@ -469,6 +526,7 @@
       box.appendChild(el("h2", { text: L.away ? "Not in this week's field" : "No tournament this week" }));
       if (L.away) box.appendChild(el("p", { class: "where", text: "On tour this week: " + shortName(L.away) }));
     }
+    if (cheerFromLive) cheerFromLive(L);
     box.appendChild(el("p", { class: "meta" }, [
       el("span", { text: (stale ? "Saved snapshot from " : "Score last changed ") + fmtET(L.updated, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) }),
       ext("https://www.lpga.com/athletes/ina-yoon/102401/overview", "Official scoring on LPGA.com")

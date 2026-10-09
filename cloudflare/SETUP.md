@@ -53,7 +53,8 @@ Send Claude the Worker address, or do it yourself: open `data/content.js`, find 
 - **Only your site can send cheers.** The Worker accepts them from `https://islandgreens.github.io` only. When you get a custom domain, add it to the `ALLOWED_ORIGINS` list at the top of `worker.js` and deploy again.
 - **The cap is 10 cheers per visitor per hour.** Change `CHEERS_PER_HOUR` at the top of `worker.js` to adjust it.
 - **No visitor addresses are stored.** The Worker keeps only a scrambled marker that changes every hour and is deleted soon after.
-- **"This week" resets every Monday** (UTC), so each tournament starts from zero. The all-time total never resets.
+- **"This week" resets every Monday at 6 AM Eastern** (daylight saving handled), so each tournament starts from zero and a late Sunday finish on the West Coast or in Hawaii still counts toward its own week. The all-time total never resets.
+- **To update the code later,** repeat step 4 with the new `worker.js`. The database and binding stay as they are, and the counts carry over.
 - **Free plan room:** the database allows 100,000 writes a day and each cheer uses three, so about 33,000 cheers a day before Cloudflare pauses it until midnight UTC. If that ever happens the button hides itself and the rest of the site is unaffected.
 - **To reset the numbers,** open the `inayoon` database, select **Console** and run `DELETE FROM counters;`
 - This folder is published along with the site. That is fine: it contains no passwords or keys.

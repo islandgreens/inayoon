@@ -39,6 +39,7 @@ function lineOf(ev) {
       id: String(ev.id), name: ev.name,
       start: String(ev.date || "").slice(0, 10), end: String(ev.endDate || "").slice(0, 10),
       course: ev.courses?.[0]?.name || "",
+      numberOfRounds: ev.tournament?.numberOfRounds || null,
     },
     rounds: (c.linescores?.items || []).map((l) => l.value).filter((v) => typeof v === "number" && v > 0),
     total: c.score?.value ?? null,

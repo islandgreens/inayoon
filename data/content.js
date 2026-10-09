@@ -1,6 +1,6 @@
 /* Ina Yoon fan page content. Facts carry source ids from SOURCES (videos, schedule and live data do not).
    Edit this file to update the page; layout code never needs to change.
-   Content verified on: 2026-10-07 (v10). */
+   Content verified on: 2026-10-07 (v11). */
 window.IY = (function () {
   const SOURCES = {
     wiki: { label: "Wikipedia: Ina Yoon", url: "https://en.wikipedia.org/wiki/Ina_Yoon" },
@@ -100,7 +100,22 @@ window.IY = (function () {
   const api = "https://inayoon-api.digitaldarkmatter.workers.dev";
 
   /* Shown small in the footer of every page. Bump once per build, to match the zip. */
-  const version = "v10";
+  const version = "v11";
+
+  /* Cheer bar goal for the week (weeks start Monday 6 AM Eastern). Raise it as traffic grows. */
+  const cheerGoal = 100;
+
+  /* Cheer bar headlines. {goal} is replaced by the number above. The page picks one from the live card's state. */
+  const cheerHeadlines = {
+    preEvent: "On the tee! Send her off with {goal} cheers!",
+    round1: "Out of the gate! {goal} cheers for a fast start!",
+    round2: "Make the cut! {goal} cheers to carry her into the weekend!",
+    round3: "Moving day! {goal} cheers to push her up the board!",
+    finalRound: "Sunday charge! {goal} cheers to bring her home!",
+    afterEvent: "Hugs and handshakes on 18! Thanks for cheering her home!",
+    offWeek: "Range session! Warm up with {goal} cheers before her next start!",
+    goalReached: "In the cup! Goal reached, keep them coming!"
+  };
 
   /* Shown after a cheer. Picked at random, never the same one twice in a row. */
   const cheerLines = [
@@ -359,5 +374,5 @@ window.IY = (function () {
     next: { name: "Buick LPGA Shanghai", start: "2026-10-15", end: "2026-10-18", startTime: "2026-10-15T04:00:00.000Z" }
   };
 
-  return { SOURCES, profile, photos, api, version, cheerLines, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
+  return { SOURCES, profile, photos, api, version, cheerGoal, cheerHeadlines, cheerLines, stats, bio, timeline, deepCuts, fanClub, team, bag, results, majors, klpga, schedule, videos, links, liveFallback };
 })();

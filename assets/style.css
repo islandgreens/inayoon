@@ -247,20 +247,44 @@ h1.page-title { font-size: clamp(30px, 4.5vw, 44px); margin-top: 6px; }
 }
 @media (max-width: 380px) { .top nav a { font-size: 12px; padding: 10px 5px; } }
 
-/* v6: cheer button */
-.cheer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin: 0 0 16px; padding: 14px 18px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+/* v11: cheer bar (scoreboard, goal, headline) */
+.cheer { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px 32px; align-items: center; margin: 0 0 16px; padding: 18px 24px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
 .cheer[hidden] { display: none; }
-.cheer-btn { position: relative; font: inherit; font-family: var(--display); font-weight: 800; font-size: 17px; color: var(--ink); background: var(--pink); border: 0; border-radius: 999px; padding: 12px 22px; min-height: 46px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: transform 0.12s ease; }
-.cheer-btn:hover { background: var(--pink-soft); }
+.cheer-left { display: flex; align-items: center; gap: 22px; }
+.cheer-btn { position: relative; font: inherit; font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--ink); background: var(--pink); border: 0; border-radius: 999px; padding: 14px 28px; min-height: 54px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 0 0 6px rgba(255, 95, 162, 0.18), 0 0 0 14px rgba(255, 95, 162, 0.07); transition: transform 0.12s ease, box-shadow 0.2s ease; }
+.cheer-btn:hover { background: var(--pink-soft); box-shadow: 0 0 0 7px rgba(255, 95, 162, 0.25), 0 0 0 16px rgba(255, 95, 162, 0.1); }
 .cheer-btn:active { transform: scale(0.95); }
-.cheer-btn:disabled { cursor: default; opacity: 0.85; }
-.cheer-btn .spark { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 3px var(--ink); }
+.cheer-btn:disabled { cursor: default; }
+.cheer-btn .ball { width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.12); flex: none; }
+.board-wrap { display: flex; flex-direction: column; gap: 6px; }
+.board { display: flex; gap: 4px; }
+.board b { position: relative; font-family: var(--display); font-weight: 800; font-size: 34px; line-height: 1; min-width: 30px; padding: 8px 6px; text-align: center; color: var(--yellow); background: var(--ink); border-radius: 6px; font-variant-numeric: tabular-nums; }
+.board b::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0, 0, 0, 0.55); }
+.board b.dim { color: rgba(255, 216, 74, 0.25); }
+.board.bump b:not(.dim) { animation: flip 0.35s ease; }
+@keyframes flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
+.board-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.cheer-goal { min-width: 0; }
+.cheer-head { margin: 0; font-family: var(--display); font-weight: 800; font-size: 20px; line-height: 1.2; }
+.cheer-sub { margin: 4px 0 10px; font-size: 13.5px; color: var(--muted); }
+.goal-bar { height: 14px; border-radius: 999px; background: var(--ink); overflow: hidden; position: relative; }
+.goal-bar i { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 999px; background: repeating-linear-gradient(-45deg, var(--pink) 0 10px, var(--pink-soft) 10px 20px); transition: width 0.6s ease; }
+.goal-bar.done i { background: repeating-linear-gradient(-45deg, var(--yellow) 0 10px, #ffe58a 10px 20px); }
+.cheer-foot { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; margin-top: 8px; }
+.cheer-meta { margin: 0; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cheer-note { margin: 0; font-size: 13px; font-weight: 700; color: var(--pink-soft); min-height: 1.3em; }
+@media (prefers-reduced-motion: reduce) { .board.bump b:not(.dim) { animation: none; } .goal-bar i { transition: none; } }
+@media (max-width: 860px) { .cheer { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) {
+  .cheer { padding: 16px; }
+  .cheer-left { gap: 14px; }
+  .cheer-btn { font-size: 19px; padding: 12px 20px; min-height: 50px; }
+  .board b { font-size: 28px; min-width: 24px; padding: 7px 4px; }
+  .cheer-head { font-size: 18px; }
+}
 .fx { position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden; }
 .fx-p { position: absolute; border-radius: 50%; background: currentColor; opacity: 0; will-change: transform, opacity; }
 .fx-p.ring { background: transparent; border: 2px solid currentColor; }
-.cheer-text { flex: 1 1 220px; min-width: 0; }
-.cheer-count { margin: 0; font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
-.cheer-note { margin: 2px 0 0; font-size: 13px; color: var(--muted); min-height: 1.3em; }
 
 /* v9: countdown and last-result line on the live card */
 .live .cd .num b { color: var(--yellow); }
