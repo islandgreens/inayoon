@@ -1,0 +1,9 @@
+// Cloudflare settings for the Ina Yoon fan page (yoonshine.com).
+// The site is plain files, served as they are. No build step.
+{
+  "name": "yoonshine",
+  "compatibility_date": "2026-10-09",
+  "assets": {
+    "directory": "./"
+  }
+}
