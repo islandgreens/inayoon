@@ -1,0 +1,10 @@
+# Files in the repository that are not part of the website.
+.git
+.github
+.assetsignore
+wrangler.jsonc
+scripts
+cloudflare
+*.md
+.wrangler
+node_modules
