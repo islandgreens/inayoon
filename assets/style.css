@@ -255,6 +255,9 @@ h1.page-title { font-size: clamp(30px, 4.5vw, 44px); margin-top: 6px; }
 .cheer-btn:hover { background: var(--pink-soft); box-shadow: 0 0 0 7px rgba(255, 95, 162, 0.25), 0 0 0 16px rgba(255, 95, 162, 0.1); }
 .cheer-btn:active { transform: scale(0.95); }
 .cheer-btn:disabled { cursor: default; }
+.cheer-btn.spent, .cheer-btn.spent:hover { background: #6E6A8A; color: #E4E1F2; box-shadow: none; cursor: not-allowed; transform: none; }
+.cheer-btn.spent .ball { opacity: 0.45; }
+@media (max-width: 380px) { .cheer-btn.spent { font-size: 17px; padding: 12px 14px; gap: 8px; } }
 .cheer-btn .ball { width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.12); flex: none; }
 .board-wrap { display: flex; flex-direction: column; gap: 6px; }
 .board { display: flex; gap: 4px; }

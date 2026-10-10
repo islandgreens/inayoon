@@ -5,5 +5,13 @@
   "compatibility_date": "2026-10-09",
   "assets": {
     "directory": "./"
-  }
+  },
+  // Serve the site only on its own domain. Without these lines every deploy would switch
+  // the yoonshine.<account>.workers.dev address (and preview addresses) back on.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "yoonshine.com", "custom_domain": true },
+    { "pattern": "www.yoonshine.com", "custom_domain": true }
+  ]
 }

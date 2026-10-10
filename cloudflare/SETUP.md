@@ -1,5 +1,7 @@
 # Cloudflare Worker setup: the cheer counter
 
+This is already set up and running (Worker `inayoon-api`, database `inayoon`). Keep this guide for updating the code, for the commands at the bottom, or for rebuilding from scratch.
+
 About 10 minutes, all in the Cloudflare dashboard. Nothing to install. Button and menu names follow Cloudflare's help pages as of October 2026 (https://developers.cloudflare.com/d1/get-started/); if a label has moved, look for the nearest match.
 
 You will create two things: a small database that holds the count, and a Worker (a script Cloudflare runs for you) that the fan page talks to.
@@ -46,15 +48,16 @@ Your Worker's address is shown on its page and looks like `https://inayoon-api.S
 
 ## 6. Switch the button on (already done in site v7)
 
-Send Claude the Worker address, or do it yourself: open `data/content.js`, find the line `const api = "";` and put the address between the quotes, with no slash at the end. Upload the file to GitHub. The cheer button appears on the home page once the page can reach the Worker.
+The Worker address goes in `data/content.js`, on the line `const api = "...";`, with no slash at the end. The cheer bar appears on the home page once the page can reach the Worker.
 
 ## Good to know
 
-- **Only your site can send cheers.** The Worker accepts them from `https://islandgreens.github.io` only. When you get a custom domain, add it to the `ALLOWED_ORIGINS` list at the top of `worker.js` and deploy again.
-- **The cap is 10 cheers per visitor per hour.** Change `CHEERS_PER_HOUR` at the top of `worker.js` to adjust it.
+- **Only your site can send cheers.** The Worker accepts them from `https://yoonshine.com` and `https://www.yoonshine.com` only (the `ALLOWED_ORIGINS` list at the top of `worker.js`). Anyone can read the counts.
+- **The cap is 10 cheers per visitor per hour,** counted in clock hours (UTC, which lines up with Eastern hours). People on one internet connection share one allowance. When a visitor runs out, the page greys out the button, shows "Voice gone!" and says when it reopens. Change `CHEERS_PER_HOUR` at the top of `worker.js` to adjust it.
 - **No visitor addresses are stored.** The Worker keeps only a scrambled marker that changes every hour and is deleted soon after.
 - **"This week" resets every Monday at 6 AM Eastern** (daylight saving handled), so each tournament starts from zero and a late Sunday finish on the West Coast or in Hawaii still counts toward its own week. The all-time total never resets.
 - **To update the code later,** repeat step 4 with the new `worker.js`. The database and binding stay as they are, and the counts carry over.
 - **Free plan room:** the database allows 100,000 writes a day and each cheer uses three, so about 33,000 cheers a day before Cloudflare pauses it until midnight UTC. If that ever happens the button hides itself and the rest of the site is unaffected.
 - **To reset the numbers,** open the `inayoon` database, select **Console** and run `DELETE FROM counters;`
+- **To clear everyone's hourly limit** (for example after testing), run `DELETE FROM limits;` in the same Console.
 - This folder is published along with the site. That is fine: it contains no passwords or keys.

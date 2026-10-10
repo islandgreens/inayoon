@@ -74,7 +74,8 @@
     var GOAL = D.cheerGoal || 100, H = D.cheerHeadlines || {};
     var num = function (n) { return Number(n || 0).toLocaleString("en-US"); };
     var fill = function (t) { return String(t || "").replace(/\{goal\}/g, num(GOAL)); };
-    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "ball", "aria-hidden": "true" }), "Go Ina!"]);
+    var cLabel = el("span", { class: "cheer-label", text: "Go Ina!" });
+    var cBtn = el("button", { type: "button", class: "cheer-btn" }, [el("span", { class: "ball", "aria-hidden": "true" }), cLabel]);
     var board = el("div", { class: "board", "aria-hidden": "true" });
     var boardWrap = el("div", { class: "board-wrap" }, [board, el("span", { class: "board-label", text: "Cheers this week" })]);
     var cHead = el("p", { class: "cheer-head" });
@@ -175,19 +176,41 @@
       }
       setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); }, longest + 150);
     };
+    /* v12: hourly limit reached. The Worker counts per UTC hour, so the button reopens at the top of the
+       next UTC hour, shown in the visitor's own clock (in half-hour zones that reads as :30). */
+    var spent = false, reopenAt = 0, reopenTimer = null;
+    var reopen = function () {
+      if (!spent || Date.now() < reopenAt) return;
+      spent = false; clearTimeout(reopenTimer);
+      cBtn.classList.remove("spent"); cBtn.disabled = false; cLabel.textContent = "Go Ina!";
+      cNote.textContent = "";
+    };
+    var voiceGone = function () {
+      var now = Date.now();
+      reopenAt = (Math.floor(now / 3600000) + 1) * 3600000 + 2000; /* 2 s of slack for clock drift */
+      spent = true;
+      cBtn.classList.add("spent"); cBtn.disabled = true; cLabel.textContent = "Voice gone!";
+      var at = new Date(reopenAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+      cNote.textContent = "Easy, superfan! Save some voice for the back nine. Back at " + at + ".";
+      clearTimeout(reopenTimer);
+      reopenTimer = setTimeout(reopen, reopenAt - now + 500);
+    };
+    /* Timers can sleep in background tabs; check again whenever the page comes back. */
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) reopen(); });
+    window.addEventListener("focus", reopen);
     cBtn.addEventListener("click", function () {
-      if (busy) return;
+      if (busy || spent) return;
       busy = true; cBtn.disabled = true;
       fetch(D.api + "/cheers", { method: "POST" })
         .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
         .then(function (res) {
           if (typeof res.j.total === "number") { showCounts(res.j); board.classList.remove("bump"); void board.offsetWidth; board.classList.add("bump"); }
           if (res.status === 200) { burst(); cNote.textContent = nextLine(); }
-          else if (res.status === 429) cNote.textContent = "Easy, superfan! Save some voice for the back nine.";
+          else if (res.status === 429) voiceGone();
           else cNote.textContent = "Cheers are resting. Try again later.";
         })
         .catch(function () { cNote.textContent = "Cheers are resting. Try again later."; })
-        .then(function () { setTimeout(function () { busy = false; cBtn.disabled = false; }, 900); });
+        .then(function () { setTimeout(function () { busy = false; if (!spent) cBtn.disabled = false; }, 900); });
     });
     cheerBox.appendChild(el("div", { class: "cheer-left" }, [cBtn, boardWrap]));
     cheerBox.appendChild(el("div", { class: "cheer-goal" }, [cHead, cSub, bar, el("div", { class: "cheer-foot" }, [cMeta, cNote])]));

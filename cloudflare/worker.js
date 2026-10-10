@@ -4,9 +4,10 @@
 // Needs one binding: a D1 database with the variable name DB.
 // The Worker creates its own tables the first time it runs.
 
-// Sites allowed to use this Worker. Add your custom domain here when you have one.
+// Sites allowed to send cheers. The first one is also the fallback in the CORS header.
 const ALLOWED_ORIGINS = [
-  "https://islandgreens.github.io",
+  "https://yoonshine.com",
+  "https://www.yoonshine.com",
 ];
 const CHEERS_PER_HOUR = 10; // per visitor
 

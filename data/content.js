@@ -100,7 +100,7 @@ window.IY = (function () {
   const api = "https://inayoon-api.digitaldarkmatter.workers.dev";
 
   /* Shown small in the footer of every page. Bump once per build, to match the zip. */
-  const version = "v11";
+  const version = "v12";
 
   /* Cheer bar goal for the week (weeks start Monday 6 AM Eastern). Raise it as traffic grows. */
   const cheerGoal = 100;
@@ -121,7 +121,7 @@ window.IY = (function () {
   const cheerLines = [
     "Cheer sent! Shine on, Ina!",
     "Boom! That one carried 300 yards.",
-    "Yoon Ina, Bitina, fighting!",
+    "Yoon Ina, Bichina, fighting!",
     "Bang! Just the sound she likes.",
     "Shine, shine in the world!",
     "Pink army reporting for duty!",
@@ -160,7 +160,7 @@ window.IY = (function () {
   ];
 
   const deepCuts = [
-    { tag: "Origins", h: "Her name is a wish", t: "Hers is a pure Korean name, not one built from Chinese characters. In Korean, \"yuni na\" means to gleam or shine. Her paternal grandmother insisted on it, saying: shine, shine in the world.", src: ["sed24sep"], tone: "yellow" },
+    { tag: "Origins", h: "Her name is a wish", t: "Her given name has no Chinese characters behind it. Said with her family name, Yoon Ina sounds like \"yuni na\", Korean for \"it gleams\". Before she was born, her maternal grandmother dreamed of jewels. Her paternal grandmother insisted on the name: shine, shine in the world.", src: ["sed24sep"], tone: "yellow" },
     { tag: "Origins", h: "Chasing the bang", t: "She has told the story two ways: screen golf with her father, or an underground indoor range in Seoul with a tarp for a target. Both versions end the same. She loved the loud bang of a pure strike and kept swinging harder to hear it.", src: ["sed24sep", "donga22jul"], tone: "navy" },
     { tag: "Origins", h: "106 in her first tournament", t: "She learned golf as a hobby and shot 106 in her first event in fourth grade. She says she became a competitor because tournaments were more fun than practice.", src: ["donga22feb"], tone: "navy" },
     { tag: "Origins", h: "Dad's one rule", t: "From elementary school her father taught her to swing as hard and as far as she could and never to steer the driver to avoid trouble.", src: ["donga22feb"], tone: "pink" },
@@ -179,8 +179,8 @@ window.IY = (function () {
 
   /* Fan club shout-out. Set url once the official cafe address is confirmed; the button is hidden while it is empty. */
   const fanClub = {
-    name: "Bitina",
-    lead: "Her official fan club in Korea is called Bitina. The name rhymes with hers and carries the same wish: \"bichi na\" means \"shining\", literally \"light comes out\". At tournaments they turn up in pink and chant \"Yoon Ina, Bitina, fighting!\"",
+    name: "Bichina",
+    lead: "Her official fan club in Korea is called Bichina. The name rhymes with hers and carries the same wish: \"bichi na\" means \"shining\", literally \"light comes out\". At tournaments they turn up in pink, holding banners that read \"Yoon Ina, Bichina, fighting!\"",
     charity: "They also do real good. Members pay into a Birdie Fund for every birdie she makes, she adds her own money, and the total goes to children and teenagers with cancer at Yonsei Medical Center in Seoul.",
     tiles: [
       { v: "4,753", k: "Fan cafe members", n: "October 2024, fourth among Korean women pros" },
@@ -188,7 +188,7 @@ window.IY = (function () {
       { v: "43M won", k: "Donated in December 2025", n: "Birdie Fund plus her own money" }
     ],
     url: "https://cafe.naver.com/enayoune",
-    urlLabel: "Visit the Bitina fan cafe on Naver (in Korean)",
+    urlLabel: "Visit the Bichina fan cafe on Naver (in Korean)",
     src: ["heraldFans", "edailyFan", "munhwaDonate", "news1Donate", "sed24sep"]
   };
 
