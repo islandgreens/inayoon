@@ -100,7 +100,7 @@ window.IY = (function () {
   const api = "https://inayoon-api.digitaldarkmatter.workers.dev";
 
   /* Shown small in the footer of every page. Bump once per build, to match the zip. */
-  const version = "v12";
+  const version = "v13";
 
   /* Cheer bar goal for the week (weeks start Monday 6 AM Eastern). Raise it as traffic grows. */
   const cheerGoal = 100;

@@ -2,6 +2,8 @@
 
 This is already set up and running (Worker `inayoon-api`, database `inayoon`). Keep this guide for updating the code, for the commands at the bottom, or for rebuilding from scratch.
 
+Since v14 the same Worker also serves her live tournament line at `/api/live`, through two routes on the site's own address: `yoonshine.com/api/*` and `www.yoonshine.com/api/*` (Settings, Domains & Routes, Add, Route). It asks ESPN for fresh data at most about once a minute around her events and every 15 minutes otherwise, however many people have the page open, and keeps the last good line in the database if ESPN is unavailable.
+
 About 10 minutes, all in the Cloudflare dashboard. Nothing to install. Button and menu names follow Cloudflare's help pages as of October 2026 (https://developers.cloudflare.com/d1/get-started/); if a label has moved, look for the nearest match.
 
 You will create two things: a small database that holds the count, and a Worker (a script Cloudflare runs for you) that the fan page talks to.
@@ -45,6 +47,7 @@ Your Worker's address is shown on its page and looks like `https://inayoon-api.S
 1. Open that address in a browser. You should see: `{"ok":true,"service":"ina yoon fan page","database":true}`
    - If it says `"database":false`, step 3 was missed or the variable name is not exactly `DB`.
 2. Add `/cheers` to the end of the address. You should see: `{"week":0,"total":0}`
+3. After adding the routes: `https://yoonshine.com/api/cheers` shows the same counts, and `https://yoonshine.com/api/live` shows her line (it starts with `{"updated":`).
 
 ## 6. Switch the button on (already done in site v7)
 
@@ -59,5 +62,6 @@ The Worker address goes in `data/content.js`, on the line `const api = "...";`, 
 - **To update the code later,** repeat step 4 with the new `worker.js`. The database and binding stay as they are, and the counts carry over.
 - **Free plan room:** the database allows 100,000 writes a day and each cheer uses three, so about 33,000 cheers a day before Cloudflare pauses it until midnight UTC. If that ever happens the button hides itself and the rest of the site is unaffected.
 - **To reset the numbers,** open the `inayoon` database, select **Console** and run `DELETE FROM counters;`
+- **The live line** is kept in a table called `live`. To force a fresh read from ESPN on the next visit, run `DELETE FROM live;` in the Console.
 - **To clear everyone's hourly limit** (for example after testing), run `DELETE FROM limits;` in the same Console.
 - This folder is published along with the site. That is fine: it contains no passwords or keys.
